@@ -11,6 +11,9 @@ class Main:
         self.clock = pg.time.Clock()
         self.new_game()
  
+    def login(self):
+        pass
+    
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
