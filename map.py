@@ -41,7 +41,7 @@ maplayout4 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, _, 1, 1, 1, 1],
              [_, _, _, _, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1, 1, 5]]
+             [1, 1, 1, 1, 1, 1, 1, 1]]
 
 
 class Map:
@@ -67,7 +67,6 @@ class Map:
             for i, value in enumerate(row):
                 if value:
                     self.mapfinal[(i, j)] = value
-                    print(self.mapfinal)
                     
         print(self.mapfinal)
         

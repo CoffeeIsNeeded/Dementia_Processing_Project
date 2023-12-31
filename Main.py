@@ -10,16 +10,13 @@ class Main:
         self.display = pg.display.set_mode(RES)
         self.clock = pg.time.Clock()
         self.new_game()
- 
-    def login(self):
-        pass
     
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
            
     def update(self):
-        self.player.update()
+        #self.player.update()
         pg.display.flip()
     
     def check_events(self):
@@ -30,8 +27,8 @@ class Main:
     
     def draw(self):
         self.display.fill((143, 186, 235, 1))
-        self.player.draw()
-        self.map.draw()
+        #self.player.draw()
+        #self.map.draw()
     
     def run(self):
         while True:
