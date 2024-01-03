@@ -26,9 +26,9 @@ class Main:
         self.player.update()
         pg.display.flip()
 
-    def update_menu(self):
-        self.manager.update(self.time_delta)
-        pg.display.flip()
+    #def update_menu(self):
+        #self.manager.update(self.time_delta)
+        #pg.display.flip()
 
     def chk_game_events(self):
         for event in pg.event.get():
@@ -36,22 +36,22 @@ class Main:
                 pg.quit()
                 sys.exit()
 
-    def chk_events_menu(self):
-        for event in pg.event.get():
-            if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
-                pg.quit()
-                sys.exit()
+    #def chk_events_menu(self):
+        #for event in pg.event.get():
+            #if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                #pg.quit()
+                #sys.exit()
                 
-            if event.type == pg_gui.UI_BUTTON_PRESSED:
-                self.game_start = False
-            self.manager.process_events(event)
+            #if event.type == pg_gui.UI_BUTTON_PRESSED:
+                #self.game_start = False
+            #self.manager.process_events(event)
 
-    def draw_menu(self):
-        self.display.fill((143, 186, 235, 1))
-        self.start_but = pg_gui.elements.UIButton(relative_rect=pg.Rect((350, 275), BUTTON_SIZE), text='START', manager=self.manager)
-        self.settings_but = pg_gui.elements.UIButton(relative_rect=pg.Rect((350, 475), BUTTON_SIZE), text='SETTINGS', manager=self.manager)
-        self.quit_but = pg_gui.elements.UIButton(relative_rect=pg.Rect((350, 675), BUTTON_SIZE), text='QUIT', manager=self.manager)
-        self.manager.draw_ui(self.display)
+    #def draw_menu(self):
+        #self.display.fill((143, 186, 235, 1))
+        #self.start_but = pg_gui.elements.UIButton(relative_rect=pg.Rect((350, 275), BUTTON_SIZE), text='START', manager=self.manager)
+        #self.settings_but = pg_gui.elements.UIButton(relative_rect=pg.Rect((350, 475), BUTTON_SIZE), text='SETTINGS', manager=self.manager)
+        #self.quit_but = pg_gui.elements.UIButton(relative_rect=pg.Rect((350, 675), BUTTON_SIZE), text='QUIT', manager=self.manager)
+        #self.manager.draw_ui(self.display)
         
     def draw_game(self):
         self.display.fill((143, 186, 235, 1))
@@ -60,15 +60,15 @@ class Main:
     
     def run(self):
         while self.running == True:
-            self.chk_events_menu()
-            self.update_menu()
-            self.draw_menu()
-            if self.game_start == False:
-                while self.running == True:
-                    self.chk_game_events()
-                    self.update_game()
-                    self.draw_game()
-                    self.clock.tick(60)
+            #self.chk_events_menu()
+            #self.update_menu()
+            #self.draw_menu()
+            #if self.game_start == False:
+                #while self.running == True:
+            self.chk_game_events()
+            self.update_game()
+            self.draw_game()
+            self.clock.tick(60)
             
 if __name__ == '__main__':
     main = Main()

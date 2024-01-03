@@ -67,8 +67,6 @@ class Map:
             for i, value in enumerate(row):
                 if value:
                     self.mapfinal[(i, j)] = value
-                    
-        print(self.mapfinal)
         
     def draw(self):
         [pg.draw.rect(self.main.display, (72, 102, 120, 1), (pos[0] * 40, pos[1] * 40, 40, 40), 40) for pos in self.mapfinal]
