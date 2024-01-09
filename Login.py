@@ -1,14 +1,18 @@
 import pygame as pg
+import pygame_gui as pg_gui
+import Dementia_Processing_Project.Database as Database
 
 class Login:
-    def __init__(self, username, password, DB_username, DB_password):
+    def __init__(self, username, password):
         username.self = username
         password.self = password
-        DB_username.self = DB_username
-        DB_password.self = DB_password
     
-    def reg(self):
-        pass
+    def reg(self, connection):
+        null = 0
+        username = input("Enter username:")
+        password = input("Enter password:")
+        age = int(input("Enter age:"))
+        Database.add_user(connection, username, password, age, null, null, null, null, null)
 
     def ent_cred(self):
         pass
