@@ -33,7 +33,7 @@ class Main:
                 sys.exit()
         
     def draw_game(self):
-        self.display.fill((143, 186, 235, 1))
+        self.display.fill(STAND_BACK_COL)
         self.player.draw()
         self.map.draw()
     

@@ -1,6 +1,7 @@
 import pygame as pg
 import pygame_gui as pg_gui
 from settings import *
+import sys
 
 display = pg.display.set_mode((RES))
 
@@ -15,10 +16,11 @@ class Settings_But:
     def __init__(self) -> None:
         self.back_but = pg_gui.elements.UIButton(pg.Rect((350, 275), BUTTON_SIZE), 'BACK', manager)
         self.colblind_dropdown = pg_gui.elements.UIDropDownMenu(['Colour Blind 0', 'Colour Blind 1', 'Colour Blind 2'], 'Colour Blind 0', pg.Rect((100, 100), (200, 30)), manager)
-        
+        self.return_back = True
+                
     def but_pressed(self, but):
         if but == self.back_but:
-            pass
+            self.return_back = False
             
     def drop_used(self, used, pre_event):
         event = pre_event
@@ -34,7 +36,7 @@ class Settings_But:
 element = Settings_But()
 def menu():
     clock = pg.time.Clock()
-    running = True
+    running = element.return_back
     while running:
         time_delta = clock.tick(60)/1000.0
         for event in pg.event.get():

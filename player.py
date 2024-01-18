@@ -5,6 +5,7 @@ class Player:
     def __init__(self, main):
         self.main = main
         self.x, self.y = PLAYER_POS
+        self.time_total = 0
         
     def movement(self):
         x_change, y_change = 0, 0
@@ -13,15 +14,19 @@ class Player:
         if key[pg.K_w]:
             y_change -= 1
             pg.time.wait(500)
+            self.time_total += 500
         if key[pg.K_s]:
             y_change += 1
             pg.time.wait(500)
+            self.time_total += 500
         if key[pg.K_a]:
             x_change -= 1
             pg.time.wait(500)
+            self.time_total += 500
         if key[pg.K_d]:
             x_change += 1
             pg.time.wait(500)
+            self.time_total += 500
 
         self.wall_collision(x_change, y_change)
 
