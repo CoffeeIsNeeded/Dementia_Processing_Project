@@ -1,0 +1,6 @@
+Current WIP:
+- Login needs credential check function working
+- settingsGUI needs work done as a whole
+- matplotlib needs implentation
+- Timer needs implentation for maze tests
+- GUI themes need to be made for Colourblindness options (Json Files)

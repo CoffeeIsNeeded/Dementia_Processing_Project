@@ -30,27 +30,3 @@ def get_user(connection, username, password):
 def get_times_from_user(connection, username, password, t_1, t_2, t_3, t_all):
     with connection:
         return connection.execute(UPDATE_USER_TIMES, (username, password, t_1, t_2, t_3, t_all))
-
-#class SQL:
-    def connect(self):
-        return sqlite3.connect("data.db") #stupid nerd :p
-
-    def create_tables(self, connection):
-        with connection:
-            connection.execute(CREATE_USER_TABLE)
-
-    def add_user(connection, username, password, age, t_1, t_2, t_3, t_all, condition):
-        with connection:
-            connection.execute(INSERT_USER, (username, password, age, t_1, t_2, t_3, t_all, condition))
-
-    def get_all_users(connection):
-        with connection:
-            return connection.execute(GET_ALL_USERS).fetchall()
-
-    def get_user(connection, username, password):
-        with connection:
-            return connection.execute(GET_USER_BY_NAME, (username, password)).fetchall()
-
-    def get_times_from_user(connection, username, password, t_1, t_2, t_3, t_all):
-        with connection:
-            return connection.execute(UPDATE_USER_TIMES, (username, password, t_1, t_2, t_3, t_all))
