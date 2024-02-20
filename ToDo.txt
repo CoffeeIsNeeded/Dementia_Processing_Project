@@ -1,6 +1,8 @@
 Current WIP:
 - Login needs credential check function working
 - settingsGUI needs work done as a whole
+    - Colourblindness and text sizes settings need to work:
+        - Pygame_GUI themes will solve this and are being worked
+        - Json Files have been made (One step completed Yipee!)
 - matplotlib needs implentation
 - Timer needs implentation for maze tests
-- GUI themes need to be made for Colourblindness options (Json Files)

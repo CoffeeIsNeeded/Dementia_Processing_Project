@@ -3,6 +3,7 @@ import pygame as pg
 import pygame_gui as pg_gui
 import Database
 from Main import *
+import settings_GUI
 
 pg.init()
 pg.display.set_caption('Dementia Project')
@@ -11,7 +12,9 @@ display = pg.display.set_mode((RES))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
 
-manager = pg_gui.UIManager((RES))
+element = settings_GUI.Settings_But()
+theme = element.theme_chk()
+manager = pg_gui.UIManager((RES), theme)
 
 clock = pg.time.Clock()
 running = True
@@ -29,7 +32,8 @@ class Login:
         self.username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((350, 275), BUTTON_SIZE), manager)
         self.password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((350, 325), BUTTON_SIZE), manager)
         self.age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((350, 375), BUTTON_SIZE), manager)
-        self.reg_but = pg_gui.elements.UIButton(pg.Rect((350, 675), BUTTON_SIZE), 'REGISTER', manager)
+        self.reg_but = pg_gui.elements.UIButton(pg.Rect((450, 675), BUTTON_SIZE), 'REGISTER', manager)
+        self.back_but = pg_gui.elements.UIButton(pg.Rect((250, 675), BUTTON_SIZE), 'BACK', manager)
         
     def chk_text_entry(self, process, event):
         if process == self.username_entry:
@@ -45,8 +49,9 @@ class Login:
             print("Registration complete")
             main = Main()
             main.run()
+        if process == self.back_but:
+            return False
             
-    
     def reg(self, connection):
         null = 0
         Database.add_user(self.connection, self.username, self.password, self.age, null, null, null, null, null)
@@ -56,9 +61,6 @@ class Login:
 
     def chk_cred(self):
         pass
-
-    def draw(self):
-        pass
     
 process = Login(connection)
 def menu():
@@ -66,13 +68,16 @@ def menu():
     running = True
     while running:
         time_delta = clock.tick(60)/1000.0
+        manager.get_theme().load_theme(theme)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
             if event.type == pg_gui.UI_TEXT_ENTRY_CHANGED:
                 process.chk_text_entry(event.ui_element, event)
             if event.type == pg_gui.UI_BUTTON_PRESSED:
-                process.but(event.ui_element) 
+                process.but(event.ui_element)
+                if process.but(event.ui_element) == False:
+                    running = False
             
             manager.process_events(event)
 

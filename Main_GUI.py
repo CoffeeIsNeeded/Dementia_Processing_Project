@@ -11,7 +11,9 @@ display = pg.display.set_mode((RES))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
 
-manager = pg_gui.UIManager((RES))
+element = settings_GUI.Settings_But()
+theme = element.theme_chk()
+manager = pg_gui.UIManager((RES), theme)
 
 clock = pg.time.Clock()
 
@@ -44,7 +46,7 @@ while running:
         manager.process_events(event)
 
     manager.update(time_delta)
-
+    manager.get_theme().load_theme(theme)
     display.blit(background, (0, 0))
     manager.draw_ui(display)
 

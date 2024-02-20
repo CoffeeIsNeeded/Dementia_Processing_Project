@@ -1,8 +1,14 @@
+# Player:
 PLAYER_START1 = 0.5, 1.5
 PLAYER_START2 = 0.5, 4.5
 PLAYER_POS = 0.5, 1.5
-
-RES = WIDTH, HEIGHT = 800, 800
 KEY_COOLDOWN = 0
+
+# Start_up:
+RES = WIDTH, HEIGHT = 800, 800
+
+# GUI: 
 BUTTON_SIZE = (100, 50)
 STAND_BACK_COL = 143, 186, 235, 1
+
+THEME_PATH = 'Json_Files/theme_0.json'
