@@ -30,9 +30,9 @@ def Update_Times(connection):
     t_1 = int(input("Enter time 1"))
     t_2 = int(input("Enter time 2"))
     t_3 = int(input("Enter time 3"))
-    t_all = (t_1 + t_2 + t_3)
+    t_avg = (t_1 + t_2 + t_3) / 3
             
-    Database.get_times_from_user(connection, t_1, t_2, t_3, t_all, username, password)
+    Database.get_times_from_user(connection, t_1, t_2, t_3, t_avg, username, password)
 
 def menu():
     connection = Database.connect()

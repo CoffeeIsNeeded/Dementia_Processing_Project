@@ -3,7 +3,6 @@ import pygame as pg
 import pygame_gui as pg_gui
 import Database
 from Main import *
-import settings_GUI
 
 pg.init()
 pg.display.set_caption('Dementia Project')
@@ -12,9 +11,7 @@ display = pg.display.set_mode((RES))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
 
-element = settings_GUI.Settings_But()
-theme = element.theme_chk()
-manager = pg_gui.UIManager((RES), theme)
+manager = pg_gui.UIManager((RES), THEME_PATH)
 
 clock = pg.time.Clock()
 running = True
@@ -68,7 +65,7 @@ def menu():
     running = True
     while running:
         time_delta = clock.tick(60)/1000.0
-        manager.get_theme().load_theme(theme)
+        manager.get_theme().load_theme(THEME_PATH)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False

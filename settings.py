@@ -10,5 +10,6 @@ RES = WIDTH, HEIGHT = 800, 800
 # GUI: 
 BUTTON_SIZE = (100, 50)
 STAND_BACK_COL = 143, 186, 235, 1
-
 THEME_PATH = 'Json_Files/theme_0.json'
+
+
