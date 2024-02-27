@@ -10,8 +10,7 @@ display = pg.display.set_mode((RES))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
 
-manager = pg_gui.UIManager((RES), THEME_PATH)
-manager.get_theme().load_theme(THEME_PATH)
+manager = CB
 
 class Menu_But:
     def __init__(self):

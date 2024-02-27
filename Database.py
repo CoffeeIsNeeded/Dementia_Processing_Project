@@ -7,7 +7,8 @@ INSERT_USER = "INSERT INTO users (username, password, age, t_1, t_2, t_3, t_avg,
 GET_ALL_USERS = "SELECT * FROM users;"
 GET_ALL_AGE_Y_TIME = "SELECT age, t_avg FROM users;"
 GET_USER_BY_NAME = "SELECT * FROM users WHERE username = ? AND WHERE password = ?;"
-UPDATE_USER_TIMES = "UPDATE users SET t_1 = ?, t_2 = ?, t_3 = ?, t_avg = ? WHERE username = ? AND password = ?;"
+UPDATE_USER_TIMES_UP = "UPDATE users SET t_1 = ?, t_2 = ?, t_3 = ?, t_avg = ? WHERE username = ? AND password = ?;"
+UPDATE_USER_TIMES_ID = "UPDATE users SET t_1 = ?, t_2 = ?, t_3 = ?, t_avg = ? WHERE id = ?;"
 
 def connect():
     return sqlite3.connect("data.db")
@@ -30,8 +31,12 @@ def get_user(connection, username, password):
 
 def get_times_from_user(connection, username, password, t_1, t_2, t_3, t_avg):
     with connection:
-        return connection.execute(UPDATE_USER_TIMES, (username, password, t_1, t_2, t_3, t_avg))
+        return connection.execute(UPDATE_USER_TIMES_UP, (username, password, t_1, t_2, t_3, t_avg))
     
-def get_all_age_y_time(connection, age, t_avg):
+def get_times_from_user_id(connection, identifer, t_1, t_2, t_3, t_avg):
     with connection:
-        return connection.execute(GET_ALL_AGE_Y_TIME, (age, t_avg))
+        return connection.execute(UPDATE_USER_TIMES_ID, (identifer, t_1, t_2, t_3, t_avg))
+    
+def get_all_age_y_time(connection):
+    with connection:
+        return connection.execute(GET_ALL_AGE_Y_TIME).fetchall()

@@ -18,8 +18,7 @@ class Settings_But:
         self.theme = THEME_PATH
         self.continue_but = pg_gui.elements.UIButton(pg.Rect((350, 275), BUTTON_SIZE), 'CONTINUE', manager)
         self.colblind_dropdown = pg_gui.elements.UIDropDownMenu(['Colour Blind 0', 'Colour Blind 1', 'Colour Blind 2', 'Colour Blind 3', 'Colour Blind 4', 'Colour Blind 5'], 'Colour Blind 0', pg.Rect((100, 100), (200, 30)), manager)
-        self.return_back = True
-                
+
     def but_pressed(self, but):
         if but == self.continue_but:
             Main_Menu_GUI.menu()
@@ -28,17 +27,17 @@ class Settings_But:
         event = pre_event
         if used == self.colblind_dropdown:
             if event.text == 'Colour Blind 0':
-                self.theme = 'Json_Files/theme_0.json'
+                self.theme = 0
             if event.text == 'Colour Blind 1':
-                self.theme = 'Json_Files/theme_1.json'
+                self.theme = 1
             if event.text == 'Colour Blind 2':
-                self.theme = 'Json_Files/theme_2.json'
+                self.theme = 2
             if event.text == 'Colour Blind 3':
-                self.theme = 'Json_Files/theme_3.json'
+                self.theme = 3
             if event.text == 'Colour Blind 4':
-                self.theme = 'Json_Files/theme_4.json'
+                self.theme = 4
             if event.text == 'Colour Blind 5':
-                self.theme = 'Json_Files/theme_5.json'
+                self.theme = 5
 
     def theme_chk(self):
         return self.theme
@@ -49,8 +48,6 @@ element = Settings_But()
 clock = pg.time.Clock()
 running = True
 while running:
-    theme = element.theme_chk()
-    manager.get_theme().load_theme(theme)
     time_delta = clock.tick(60)/1000.0
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -70,7 +67,8 @@ while running:
     manager.draw_ui(display)
 
     pg.display.update()
-        
+    theme = element.theme_chk()
+    set_theme(theme)
 
 
 
