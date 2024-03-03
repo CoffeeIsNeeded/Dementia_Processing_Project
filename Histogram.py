@@ -26,13 +26,12 @@ class Graph:
         self.time = []
         self.graph_window = pg_gui.elements.UIWindow(pg.Rect((10, 10), (790, 400)), manager)
         self.window = pg_gui.elements.UIWindow(pg.Rect((10, 400), (790, 400)), manager)
-        self.start_but = pg_gui.elements.UIButton(pg.Rect((250, 250), BUTTON_SIZE), 'START', manager=manager, container=self.window)
-        self.quit_but = pg_gui.elements.UIButton(pg.Rect((450, 250), BUTTON_SIZE), 'QUIT', manager=manager, container=self.window)
+        self.start_but = pg_gui.elements.UIButton(pg.Rect((250, 250), BUTTON_SIZE), 'START', manager, self.window)
+        self.quit_but = pg_gui.elements.UIButton(pg.Rect((450, 250), BUTTON_SIZE), 'QUIT', manager, self.window)
 
-    def time_age(self):
+    def time_age(self, username, password):
         users = Database.get_all_age_y_time(connection)
-        print(users)
-        logged_user = Database.get_user(connection, self.username, self.password)
+        logged_user = Database.get_user(connection, username, password)
         user_avg_time = logged_user[7]
         user_age = logged_user[3]
         

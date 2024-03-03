@@ -22,40 +22,69 @@ connection = Database.connect()
 
 class Login:
     def __init__(self, connection):
+        # Database Variables:
         self.connection = connection
         self.username = ""
         self.password = ""
         self.age = 0
-        self.DB_username = ""
-        self.DB_password = ""
-
+        self.DB_username = []
+        self.DB_password = []
+        users = Database.get_all_users(connection)
+        for user in users:
+            self.DB_username.append(user[1])
+            self.DB_password.append(user[2])
+        # Maze game variables:
         self.game_start = True
         self.graph_start = False
         self.count = 3
-        self.value = 1
         self.time_array = []
         
-        self.username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((350, 275), BUTTON_SIZE), manager)
-        self.password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((350, 325), BUTTON_SIZE), manager)
-        self.age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((350, 375), BUTTON_SIZE), manager)
-        self.reg_but = pg_gui.elements.UIButton(pg.Rect((450, 675), BUTTON_SIZE), 'REGISTER', manager)
-        self.back_but = pg_gui.elements.UIButton(pg.Rect((250, 675), BUTTON_SIZE), 'BACK', manager)
+        # --------- GUI: ---------
+        # Text Entry:
+        self.reg_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 275), BUTTON_SIZE), manager)
+        self.reg_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 325), BUTTON_SIZE), manager)
+        self.reg_age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 375), BUTTON_SIZE), manager) 
+        self.log_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 275), BUTTON_SIZE), manager)
+        self.log_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 325), BUTTON_SIZE), manager)
+        self.log_age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 375), BUTTON_SIZE), manager)
+        
+        # Text Labels
+        self.log_Label = pg_gui.elements.UILabel(pg.Rect((475, 200), BUTTON_SIZE), "Login", manager)
+        self.reg_Label = pg_gui.elements.UILabel(pg.Rect((225, 200), BUTTON_SIZE), "Register", manager)
+        
+        # Buttons:
+        self.reg_but = pg_gui.elements.UIButton(pg.Rect((225, 475), BUTTON_SIZE), 'REGISTER', manager)
+        self.log_but = pg_gui.elements.UIButton(pg.Rect((475, 475), BUTTON_SIZE), 'LOGIN', manager)
+        self.back_but = pg_gui.elements.UIButton(pg.Rect((350, 675), BUTTON_SIZE), 'BACK', manager)
         
     def chk_text_entry(self, process, event):
-        if process == self.username_entry:
+        if process == self.reg_username_entry or process == self.log_username_entry:
             self.username = event.text
-        if process == self.password_entry:
+        if process == self.reg_password_entry or process == self.log_password_entry:
             self.password = event.text
-        if process == self.age_entry:
+        if process == self.reg_age_entry or process == self.log_age_entry:
             self.age = event.text
             
     def but(self, process):
         if process == self.reg_but:
-            self.reg(connection)
+            if self.username not in self.DB_username:
+                self.game_start = True
+                self.reg(connection)
+                while self.game_start:
+                    self.game_loop()
+                while self.graph_start:
+                    self.run_graph()
+        if process == self.log_but:
+            n = 0
+            self.game_start = False
+            for name in self.DB_username:
+                n += 1
+                if self.username == name and self.password == self.DB_password[n]:
+                    self.game_start = True
             while self.game_start:
                 self.game_loop()
             while self.graph_start:
-                self.run_graph()
+                self.run_graph()          
         if process == self.back_but:
             return False
         
@@ -77,8 +106,7 @@ class Login:
             t_avg += time
         Database.get_times_from_user(self.connection, self.time_array[0], self.time_array[1], self.time_array[2], t_avg, self.username, self.password)
         graph = Graph()
-        graph.username = self.username
-        graph.password = self.password
+        graph.time_age(self.username, self.password)
         Histogram.menu()
 
     def reg(self, connection):

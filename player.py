@@ -1,4 +1,6 @@
 import pygame as pg
+import time
+
 from settings import *
 
 class Player:
@@ -8,29 +10,35 @@ class Player:
         self.time_total = 0
         self.completion = 0
         self.game_stop = False
+        self.time_end = (self.return_time() + 10)
         
+    def return_time(self):
+        return time.time()
+    
     def movement(self):
-        x_change, y_change = 0, 0
+        time = self.return_time()
+        if time > self.time_end:
+            x_change, y_change = 0, 0
         
-        key = pg.key.get_pressed()
-        if key[pg.K_UP]:
-            y_change -= 1
-            pg.time.wait(500)
-            self.time_total += 500
-        if key[pg.K_DOWN]:
-            y_change += 1
-            pg.time.wait(500)
-            self.time_total += 500
-        if key[pg.K_LEFT]:
-            x_change -= 1
-            pg.time.wait(500)
-            self.time_total += 500
-        if key[pg.K_RIGHT]:
-            x_change += 1
-            pg.time.wait(500)
-            self.time_total += 500
+            key = pg.key.get_pressed()
+            if key[pg.K_UP]:
+                y_change -= 1
+                pg.time.wait(500)
+                self.time_total += 500
+            if key[pg.K_DOWN]:
+                y_change += 1
+                pg.time.wait(500)
+                self.time_total += 500
+            if key[pg.K_LEFT]:
+                x_change -= 1
+                pg.time.wait(500)
+                self.time_total += 500
+            if key[pg.K_RIGHT]:
+                x_change += 1
+                pg.time.wait(500)
+                self.time_total += 500
 
-        self.wall_collision(x_change, y_change)
+            self.wall_collision(x_change, y_change)
 
     def finish_check(self, x, y):
         x, y = self.main.map.finish_square

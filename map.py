@@ -1,6 +1,7 @@
 import pygame as pg
 from settings import *
 import random
+import time
 
 _ = None
 maplayout = [[1, 1, 1, 1, 1, 1, 1, 1],
@@ -51,6 +52,7 @@ class Map:
         self.finish_square = []
         self.get_map()
         self.x, self.y = PLAYER_POS
+        self.time_end = (self.return_time() + 10)
         
     def get_map(self):
         rannum = random.randint(1, 4)
@@ -72,6 +74,9 @@ class Map:
                 if value is not None:
                     self.mapfinal[(i, j)] = value
         
+    def return_time(self):
+        return time.time()
+    
     def draw(self):
         for pos, value in self.mapfinal.items():
             match value:
@@ -81,4 +86,7 @@ class Map:
                     colour = (0, 255, 0, 1)
             aabb = (pos[0] * 40, pos[1] * 40, 40, 40)
             
+            time = self.return_time()
+            if time > self.time_end:
+                colour = (STAND_BACK_COL)
             pg.draw.rect(self.main.display, colour, aabb, 40)
