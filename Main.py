@@ -1,5 +1,6 @@
 import pygame as pg
 import pygame_gui as pg_gui
+import time
 import sys
 
 from settings import *
@@ -17,7 +18,11 @@ class Main:
         self.manager = pg_gui.UIManager((RES))
         self.game_start = True
         self.running = True
+        self.time_taken = 0
     
+    def record_time(self):
+        return time.time()
+        
     def new_game(self):
         self.map = Map(self)
         self.player = Player(self)
@@ -38,13 +43,19 @@ class Main:
         self.map.draw()
     
     def run(self):
+        time_start = self.record_time()
+        self.running = True
         while self.running == True:
             self.chk_game_events()
             self.update_game()
             self.draw_game()
             self.clock.tick(60)
+            if self.player.game_stop == True:
+                time_end = self.record_time()
+                self.time_taken = (time_end - time_start)
+                self.running = False
+                
             
-
 if __name__ == '__main__':
     main = Main()
     main.run()

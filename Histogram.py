@@ -6,7 +6,6 @@ import pygame as pg
 import pygame_gui as pg_gui
 
 import Database
-from Login import *
 from settings import *
 
 pg.init()
@@ -25,8 +24,6 @@ class Graph:
     def __init__(self):
         self.age = []
         self.time = []
-        self.username = ""
-        self.password = ""
         self.graph_window = pg_gui.elements.UIWindow(pg.Rect((10, 10), (790, 400)), manager)
         self.window = pg_gui.elements.UIWindow(pg.Rect((10, 400), (790, 400)), manager)
         self.start_but = pg_gui.elements.UIButton(pg.Rect((250, 250), BUTTON_SIZE), 'START', manager=manager, container=self.window)
@@ -34,9 +31,10 @@ class Graph:
 
     def time_age(self):
         users = Database.get_all_age_y_time(connection)
-        user = Database.get_user(connection, self.username, self.password)
-        user_avg_time = user[7]
-        user_age = user[3]
+        print(users)
+        logged_user = Database.get_user(connection, self.username, self.password)
+        user_avg_time = logged_user[7]
+        user_age = logged_user[3]
         
         for user in users:
             self.age.append(user[0])
@@ -44,6 +42,23 @@ class Graph:
             
         time_quartile = np.quantile(self.time, [0, 0.25, 0.5, 0.75, 1])
         age_quartile = np.quantile(self.age, [0, 0.25, 0.5, 0.75, 1])
+        if time_quartile[0] <= user_avg_time < time_quartile[1]:
+            print("User time quartile 1")
+        if time_quartile[1] <= user_avg_time < time_quartile[2]:
+            print("User time quartile 2")
+        if time_quartile[2] <= user_avg_time < time_quartile[3]:
+            print("User time quartile 3")
+        if time_quartile[3] <= user_avg_time <= time_quartile[4]:
+            print("User time quartile 4")
+
+        if age_quartile[0] <= user_age < age_quartile[1]:
+            print("User age quartile 1")
+        if age_quartile[1] <= user_age < age_quartile[2]:
+            print("User age quartile 2")
+        if age_quartile[2] <= user_age < age_quartile[3]:
+            print("User age quartile 3")
+        if age_quartile[3] <= user_age <= age_quartile[4]:
+            print("User age quartile 4")
 
     def plot(self):
         plt.bar(self.age, self.time)
@@ -62,20 +77,21 @@ class Graph:
     
 but = Graph()
 
-clock = pg.time.Clock()
-running = True
-while running:
-    time_delta = clock.tick(60)/1000.0
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            running = False
-        if event.type == pg_gui.UI_BUTTON_PRESSED:
-            but.but_pressed(event.ui_element)
-        manager.process_events(event)
+def menu():
+    clock = pg.time.Clock()
+    running = True
+    while running:
+        time_delta = clock.tick(60)/1000.0
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+            if event.type == pg_gui.UI_BUTTON_PRESSED:
+                but.but_pressed(event.ui_element)
+            manager.process_events(event)
 
-    manager.update(time_delta)
-    manager.get_theme().load_theme(THEME_PATH)
-    display.blit(background, (0, 0))
-    manager.draw_ui(display)
+        manager.update(time_delta)
+        manager.get_theme().load_theme(THEME_PATH)
+        display.blit(background, (0, 0))
+        manager.draw_ui(display)
 
-    pg.display.update()
+        pg.display.update()

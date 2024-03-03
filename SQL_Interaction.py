@@ -45,6 +45,13 @@ def Update_Times_User_ID(connection):
             
     Database.get_times_from_user_id(connection, t_1, t_2, t_3, t_avg, identifier)
 
+def Get_User_By_Name(connection):
+    username = input("Enter username:")
+    password = input("Enter password:")
+
+    user = Database.get_user(connection, username, password)
+    print(user)
+
 def menu():
     connection = Database.connect()
     Database.create_tables(connection)
@@ -55,7 +62,7 @@ def menu():
         elif user_input == "2":
             See_All_Users(connection)
         elif user_input == "3":
-            pass
+            Get_User_By_Name(connection)
         elif user_input == "4":
             Update_Times_User(connection)
         elif user_input == "5":

@@ -18,11 +18,13 @@ class Settings_But:
         self.theme = THEME_PATH
         self.continue_but = pg_gui.elements.UIButton(pg.Rect((350, 275), BUTTON_SIZE), 'CONTINUE', manager)
         self.colblind_dropdown = pg_gui.elements.UIDropDownMenu(['Colour Blind 0', 'Colour Blind 1', 'Colour Blind 2', 'Colour Blind 3', 'Colour Blind 4', 'Colour Blind 5'], 'Colour Blind 0', pg.Rect((100, 100), (200, 30)), manager)
+        self.active = True
 
     def but_pressed(self, but):
         if but == self.continue_but:
             Main_Menu_GUI.menu()
-            
+            return False
+
     def drop_used(self, used, pre_event):
         event = pre_event
         if used == self.colblind_dropdown:

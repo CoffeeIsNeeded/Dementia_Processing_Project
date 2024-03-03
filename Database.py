@@ -6,7 +6,7 @@ INSERT_USER = "INSERT INTO users (username, password, age, t_1, t_2, t_3, t_avg,
 
 GET_ALL_USERS = "SELECT * FROM users;"
 GET_ALL_AGE_Y_TIME = "SELECT age, t_avg FROM users;"
-GET_USER_BY_NAME = "SELECT * FROM users WHERE username = ? AND WHERE password = ?;"
+GET_USER_BY_NAME = "SELECT * FROM users WHERE username = ? AND password = ?;"
 UPDATE_USER_TIMES_UP = "UPDATE users SET t_1 = ?, t_2 = ?, t_3 = ?, t_avg = ? WHERE username = ? AND password = ?;"
 UPDATE_USER_TIMES_ID = "UPDATE users SET t_1 = ?, t_2 = ?, t_3 = ?, t_avg = ? WHERE id = ?;"
 

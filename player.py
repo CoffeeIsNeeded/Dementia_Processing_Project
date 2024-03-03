@@ -44,9 +44,7 @@ class Player:
         if self.wall_check(int(self.x + x_change), int(self.y)):
             self.x += x_change
         elif self.finish_check((self.x), (self.y)) == [int(self.x + x_change), int(self.y)]:
-            self.completion += 1
             self.game_stop = True
-            print(self.completion)
         else:
             self.x, self.y = PLAYER_START1
             if not self.wall_check(int(self.x), int(self.y)):
@@ -56,9 +54,7 @@ class Player:
         if self.wall_check(int(self.x), int(self.y + y_change)):
             self.y += y_change
         elif self.finish_check((self.x), (self.y)) == [int(self.x), int(self.y + y_change)]:
-            self.completion += 1
             self.game_stop = True
-            print(self.completion)
         else:
             self.x, self.y = PLAYER_START1
             if not self.wall_check(int(self.x), int(self.y)):
