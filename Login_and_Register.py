@@ -112,12 +112,6 @@ class Login:
     def reg(self, connection):
         null = 0
         Database.add_user(self.connection, self.username, self.password, self.age, null, null, null, null, null)
-
-    def ent_cred(self):
-        pass
-
-    def chk_cred(self):
-        pass
     
 process = Login(connection)
 

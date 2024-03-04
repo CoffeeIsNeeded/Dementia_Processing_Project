@@ -2,7 +2,7 @@ import pygame as pg
 import pygame_gui as pg_gui
 from settings import *
 from Main import *
-import Login
+import Login_and_Register
 
 pg.init()
 pg.display.set_caption('Dementia Project')
@@ -20,7 +20,7 @@ class Menu_But:
         
     def but_pressed(self, but):
         if but == self.start_but:
-            Login.menu()
+            Login_and_Register.menu()
         if but == self.back_but:
             return False
         if but == self.quit_but:
