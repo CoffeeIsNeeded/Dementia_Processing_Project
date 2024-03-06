@@ -2,8 +2,7 @@ from settings import *
 import pygame as pg
 import pygame_gui as pg_gui
 import Database
-import Histogram
-from Histogram import *
+from Scatter import menu as Scatter_Menu
 from Main import *
 
 pg.init()
@@ -44,47 +43,49 @@ class Login:
         self.reg_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 275), BUTTON_SIZE), manager)
         self.reg_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 325), BUTTON_SIZE), manager)
         self.reg_age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 375), BUTTON_SIZE), manager) 
-        self.log_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 275), BUTTON_SIZE), manager)
-        self.log_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 325), BUTTON_SIZE), manager)
-        self.log_age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 375), BUTTON_SIZE), manager)
+        self.log_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 300), BUTTON_SIZE), manager)
+        self.log_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 350), BUTTON_SIZE), manager)
         
         # Text Labels
-        self.log_Label = pg_gui.elements.UILabel(pg.Rect((475, 200), BUTTON_SIZE), "Login", manager)
-        self.reg_Label = pg_gui.elements.UILabel(pg.Rect((225, 200), BUTTON_SIZE), "Register", manager)
+        self.log_Label = pg_gui.elements.UILabel(pg.Rect((225, 200), BUTTON_SIZE), "Login", manager)
+        self.reg_Label = pg_gui.elements.UILabel(pg.Rect((475, 200), BUTTON_SIZE), "Register", manager)
         
         # Buttons:
-        self.reg_but = pg_gui.elements.UIButton(pg.Rect((225, 475), BUTTON_SIZE), 'REGISTER', manager)
-        self.log_but = pg_gui.elements.UIButton(pg.Rect((475, 475), BUTTON_SIZE), 'LOGIN', manager)
+        self.reg_but = pg_gui.elements.UIButton(pg.Rect((475, 475), BUTTON_SIZE), 'REGISTER', manager)
+        self.log_but = pg_gui.elements.UIButton(pg.Rect((225, 475), BUTTON_SIZE), 'LOGIN', manager)
         self.back_but = pg_gui.elements.UIButton(pg.Rect((350, 675), BUTTON_SIZE), 'BACK', manager)
         
-    def chk_text_entry(self, process, event):
+    def chk_text_entry(self, process, event): # Function: Sets username, password and age variables to what is typed in the UITextEntry boxes.
         if process == self.reg_username_entry or process == self.log_username_entry:
             self.username = event.text
         if process == self.reg_password_entry or process == self.log_password_entry:
             self.password = event.text
-        if process == self.reg_age_entry or process == self.log_age_entry:
-            self.age = event.text
+        if process == self.reg_age_entry:
+            try:
+                self.age = int(event.text)
+            except:
+                self.age = 131
             
-    def but(self, process):
-        if process == self.reg_but:
+    def but(self, process): # Checks if a button is pressed and carries out the appropriate response.
+        if process == self.reg_but: # Registers user information to the database if the appropriate conditions are met then: Starts the Maze game loop (Main.py); Starts Scatter graph file (Scatter.py)
             if self.username not in self.DB_username:
-                self.game_start = True
-                self.reg(connection)
-                while self.game_start:
-                    self.game_loop()
-                while self.graph_start:
-                    self.run_graph()
-        if process == self.log_but:
-            n = 0
+                if (" " not in self.username) and (" " not in self.password):
+                    if self.age <= 130:
+                        self.game_start = True
+                        self.reg(connection)
+                        while self.game_start:
+                            self.game_loop()
+                        while self.graph_start:
+                            self.run_graph()
+        if process == self.log_but: # Checks if information entered matches with user info in the database.
+            n = -1
             self.game_start = False
             for name in self.DB_username:
                 n += 1
                 if self.username == name and self.password == self.DB_password[n]:
-                    self.game_start = True
-            while self.game_start:
-                self.game_loop()
+                    self.graph_start = True
             while self.graph_start:
-                self.run_graph()          
+                Scatter_Menu(self.username, self.password)          
         if process == self.back_but:
             return False
         
@@ -95,7 +96,6 @@ class Login:
             time = main.time_taken
             self.time_array.append(time)
             self.count -= 1
-            print(self.time_array)
         elif self.count == 0:
             self.game_start = False
             self.graph_start = True
@@ -104,10 +104,9 @@ class Login:
         t_avg = 0
         for time in self.time_array:
             t_avg += time
+        t_avg = int(t_avg / 3)
         Database.get_times_from_user(self.connection, self.time_array[0], self.time_array[1], self.time_array[2], t_avg, self.username, self.password)
-        graph = Graph()
-        graph.time_age(self.username, self.password)
-        Histogram.menu()
+        Scatter_Menu(self.username, self.password)
 
     def reg(self, connection):
         null = 0

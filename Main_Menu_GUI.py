@@ -5,24 +5,21 @@ from Main import *
 import Login_and_Register
 
 pg.init()
-pg.display.set_caption('Dementia Project')
+pg.display.set_caption('Memory Processing Tool')
 display = pg.display.set_mode((RES))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
 
-manager = CB
+manager = MANAGER
 
 class Menu_But:
     def __init__(self):
         self.start_but = pg_gui.elements.UIButton(pg.Rect((350, 275), BUTTON_SIZE), 'START', manager)
-        self.back_but = pg_gui.elements.UIButton(pg.Rect((350, 475), BUTTON_SIZE), 'BACK', manager)
         self.quit_but = pg_gui.elements.UIButton(pg.Rect((350, 675), BUTTON_SIZE), 'QUIT', manager)
         
     def but_pressed(self, but):
         if but == self.start_but:
             Login_and_Register.menu()
-        if but == self.back_but:
-            return False
         if but == self.quit_but:
             pg.quit()
             sys.exit()
@@ -39,8 +36,6 @@ def menu():
                 running = False
             if event.type == pg_gui.UI_BUTTON_PRESSED:
                 but.but_pressed(event.ui_element)
-                if but.but_pressed(event.ui_element) == False:
-                    running = False
             manager.process_events(event)
 
         manager.update(time_delta)
@@ -49,3 +44,5 @@ def menu():
         manager.draw_ui(display)
 
         pg.display.update()
+        
+menu()
