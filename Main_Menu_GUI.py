@@ -1,5 +1,6 @@
 import pygame as pg
 import pygame_gui as pg_gui
+from pygame_gui.core import ObjectID
 from settings import *
 from Main import *
 import Login_and_Register
@@ -14,8 +15,23 @@ manager = MANAGER
 
 class Menu_But:
     def __init__(self):
-        self.start_but = pg_gui.elements.UIButton(pg.Rect((350, 275), BUTTON_SIZE), 'START', manager)
-        self.quit_but = pg_gui.elements.UIButton(pg.Rect((350, 675), BUTTON_SIZE), 'QUIT', manager)
+        self.start_but = pg_gui.elements.UIButton(
+            pg.Rect((350, 375), BUTTON_SIZE), 
+            'START', manager, 
+            object_id = ObjectID(
+                class_id = '@Main_Menu_Buttons', 
+                object_id = '#start_Button'
+                )
+            )
+        self.quit_but = pg_gui.elements.UIButton(
+            pg.Rect((350, 575), BUTTON_SIZE), 
+            'QUIT', 
+            manager, 
+            object_id = ObjectID(
+                class_id = '@Main_Menu_Buttons', 
+                object_id = '#quit_Button'
+                )
+            )
         
     def but_pressed(self, but):
         if but == self.start_but:

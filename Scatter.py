@@ -4,6 +4,7 @@ import sys
 
 import pygame as pg
 import pygame_gui as pg_gui
+from pygame_gui.core import ObjectID
 
 import Database
 from settings import *
@@ -27,11 +28,61 @@ class Graph:
         self.text = ""
         self.age = []
         self.time = []
-        self.graph_panel = pg_gui.elements.UIPanel(pg.Rect((10, 10), (790, 400)), 1, manager)
-        self.panel = pg_gui.elements.UIPanel(pg.Rect((10, 400), (790, 400)), 1, manager)
-        self.start_but = pg_gui.elements.UIButton(pg.Rect((250, 250), BUTTON_SIZE), 'START', manager, self.panel)
-        self.quit_but = pg_gui.elements.UIButton(pg.Rect((450, 250), BUTTON_SIZE), 'QUIT', manager, self.panel)
-        self.age_time_label = pg_gui.elements.UILabel(pg.Rect((350, 100), (100, 50)), self.text, manager, self.panel)
+        
+        # ------GUI:------
+        self.graph_panel = pg_gui.elements.UIPanel(
+            pg.Rect((10, 10), (790, 380)), 
+            1, 
+            manager,
+            object_id = ObjectID(
+                class_id = '@Scatter Panels', 
+                object_id = '#graph_panel'
+                )
+            )
+        self.panel = pg_gui.elements.UIPanel(
+            pg.Rect((10, 400), (790, 380)), 
+            1, 
+            manager,
+            object_id = ObjectID(
+                class_id = '@Scatter Panels', 
+                object_id = '#panel'
+                )
+            )
+        
+        # Buttons:
+        self.start_but = pg_gui.elements.UIButton(
+            pg.Rect((250, 250), BUTTON_SIZE), 
+            'START', 
+            manager, 
+            self.panel
+            )
+        self.quit_but = pg_gui.elements.UIButton(
+            pg.Rect((450, 250), BUTTON_SIZE), 
+            'QUIT', 
+            manager, 
+            self.panel
+            )
+        self.image_but = pg_gui.elements.UIButton(
+            pg.Rect((0, 0), (790, 380)), 
+            '', 
+            manager, 
+            self.graph_panel,
+            object_id = ObjectID(
+                object_id = '#image_but'
+                )
+            )
+        
+        # Labels:
+        self.age_time_label = pg_gui.elements.UILabel(
+            pg.Rect((350, 100), (100, 50)), 
+            self.text, 
+            manager, 
+            self.panel,
+            object_id = ObjectID(
+                class_id = '@Scatter Labels', 
+                object_id = '#age_time_label'
+                )
+            )
 
     def time_age(self):
         users = Database.get_all_age_y_time(connection)
@@ -69,8 +120,11 @@ class Graph:
         
 
     def plot(self):
+        name ='age_time'
         plt.scatter(self.age, self.time)
-        plt.savefig('age_time.png')
+        scatter = plt.gcf()
+        scatter.set_size_inches(4, 3)
+        plt.savefig(('Images/{}'.format(name)), dpi = 100)
         plt.close()
    
     def but_pressed(self, but):

@@ -1,6 +1,7 @@
 from settings import *
 import pygame as pg
 import pygame_gui as pg_gui
+from pygame_gui.core import ObjectID
 import Database
 from Scatter import menu as Scatter_Menu
 from Main import *
@@ -40,23 +41,89 @@ class Login:
         
         # --------- GUI: ---------
         # Text Entry:
-        self.reg_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 275), BUTTON_SIZE), manager)
-        self.reg_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 325), BUTTON_SIZE), manager)
-        self.reg_age_entry = pg_gui.elements.UITextEntryLine(pg.Rect((475, 375), BUTTON_SIZE), manager) 
-        self.log_username_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 300), BUTTON_SIZE), manager)
-        self.log_password_entry = pg_gui.elements.UITextEntryLine(pg.Rect((225, 350), BUTTON_SIZE), manager)
+        self.reg_username_entry = pg_gui.elements.UITextEntryLine(
+            pg.Rect((475, 275), BUTTON_SIZE), 
+            manager, 
+            placeholder_text = "Username", 
+            object_id = ObjectID(
+                class_id = '@Register_Text_Entry', 
+                object_id = '#reg_username_entry'
+                )
+            )
+        self.reg_password_entry = pg_gui.elements.UITextEntryLine(
+            pg.Rect((475, 325), BUTTON_SIZE), 
+            manager, 
+            placeholder_text = "Password", 
+            object_id = ObjectID(
+                class_id = '@Register_Text_Entry', 
+                object_id = '#reg_password_entry'
+                )
+            )
+        self.reg_age_entry = pg_gui.elements.UITextEntryLine(
+            pg.Rect((475, 375), BUTTON_SIZE), 
+            manager, 
+            placeholder_text = "Age", 
+            object_id = ObjectID(
+                class_id = '@Register_Text_Entry', 
+                object_id = '#reg_age_entry'
+                )
+            ) 
+        self.log_username_entry = pg_gui.elements.UITextEntryLine(
+            pg.Rect((225, 300), BUTTON_SIZE), 
+            manager, 
+            placeholder_text = "Username", 
+            object_id = ObjectID(
+                class_id = '@Login_Text_Entry', 
+                object_id = '#log_username_entry'
+                )
+            )
+        self.log_password_entry = pg_gui.elements.UITextEntryLine(
+            pg.Rect((225, 350), BUTTON_SIZE), 
+            manager, 
+            placeholder_text = "Password", 
+            object_id = ObjectID(
+                class_id = '@Login_Text_Entry', 
+                object_id = '#log_password_entry'
+                )
+            )
         
         # Text Labels
-        self.log_Label = pg_gui.elements.UILabel(pg.Rect((225, 200), BUTTON_SIZE), "Login", manager)
-        self.reg_Label = pg_gui.elements.UILabel(pg.Rect((475, 200), BUTTON_SIZE), "Register", manager)
+        self.log_Label = pg_gui.elements.UILabel(
+            pg.Rect((225, 200), BUTTON_SIZE), 
+            "Login", 
+            manager, 
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg_Labels', 
+                object_id = '#log_label'
+                )
+            )
+        self.reg_Label = pg_gui.elements.UILabel(
+            pg.Rect((475, 200), BUTTON_SIZE), 
+            "Register", 
+            manager, 
+            object_id = ObjectID(
+                class_id = '@Log_AND_Reg_Labels', 
+                object_id = '#reg_label'
+                )
+            )
         
         # Buttons:
-        self.reg_but = pg_gui.elements.UIButton(pg.Rect((475, 475), BUTTON_SIZE), 'REGISTER', manager)
-        self.log_but = pg_gui.elements.UIButton(pg.Rect((225, 475), BUTTON_SIZE), 'LOGIN', manager)
-        self.back_but = pg_gui.elements.UIButton(pg.Rect((350, 675), BUTTON_SIZE), 'BACK', manager)
+        self.reg_but = pg_gui.elements.UIButton(
+            pg.Rect((475, 475), BUTTON_SIZE), 
+            'REGISTER', 
+            manager)
+        self.log_but = pg_gui.elements.UIButton(
+            pg.Rect((225, 475), BUTTON_SIZE), 
+            'LOGIN', 
+            manager)
+        self.back_but = pg_gui.elements.UIButton(
+            pg.Rect((350, 675), BUTTON_SIZE), 
+            'BACK', 
+            manager)
         
-    def chk_text_entry(self, process, event): # Function: Sets username, password and age variables to what is typed in the UITextEntry boxes.
-        if process == self.reg_username_entry or process == self.log_username_entry:
+    def chk_text_entry(self, process, event): # Function: Checks if text has been entered into the text_entry boxes. 
+        # Changes either the username, password or age to the text inputted to the text_entry box.
+        if process == self.reg_username_entry or process == self.log_username_entry: 
             self.username = event.text
         if process == self.reg_password_entry or process == self.log_password_entry:
             self.password = event.text
@@ -89,7 +156,7 @@ class Login:
         if process == self.back_but:
             return False
         
-    def game_loop(self):
+    def game_loop(self): # Function: runs the maze in main 3 times and each time recorded is appended to a time_array, then starts the scatter graph file.
         if self.count != 0:
             main = Main()
             main.run()
@@ -100,7 +167,7 @@ class Login:
             self.game_start = False
             self.graph_start = True
 
-    def run_graph(self):
+    def run_graph(self): # Function: creates a time average from the 3 time values and updates the users times with the new values. Then runs the scatter graph file.
         t_avg = 0
         for time in self.time_array:
             t_avg += time
@@ -108,7 +175,7 @@ class Login:
         Database.get_times_from_user(self.connection, self.time_array[0], self.time_array[1], self.time_array[2], t_avg, self.username, self.password)
         Scatter_Menu(self.username, self.password)
 
-    def reg(self, connection):
+    def reg(self, connection): # Function: 
         null = 0
         Database.add_user(self.connection, self.username, self.password, self.age, null, null, null, null, null)
     
