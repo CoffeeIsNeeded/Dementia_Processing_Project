@@ -15,7 +15,7 @@ manager = MANAGER
 
 class Menu_But:
     def __init__(self):
-        # ------GUI:------
+        # ------GUI:------     
         # Panels:
         self.main_menu_panel = pg_gui.elements.UIPanel(
             pg.Rect((10, 10), (780, 780)), 
@@ -29,7 +29,7 @@ class Menu_But:
         
         # Buttons:
         self.start_but = pg_gui.elements.UIButton(
-            pg.Rect((350, 375), BUTTON_SIZE), 
+            pg.Rect((500, 375), BUTTON_SIZE), 
             'START', 
             manager,
             container = self.main_menu_panel, 
@@ -39,7 +39,7 @@ class Menu_But:
                 )
             )
         self.quit_but = pg_gui.elements.UIButton(
-            pg.Rect((350, 575), BUTTON_SIZE), 
+            pg.Rect((500, 550), BUTTON_SIZE), 
             'QUIT', 
             manager,
             container = self.main_menu_panel, 
@@ -48,10 +48,22 @@ class Menu_But:
                 object_id = '#quit_Button'
                 )
             )
-        
+        # Text Boxes:
+        self.welcome_text_box = pg_gui.elements.UITextBox(
+            TEXT_ARRAY[3], 
+            pg.Rect((50, 350), (300, 250)), 
+            manager, 
+            starting_height = 1, 
+            container = self.main_menu_panel, 
+            object_id = ObjectID(
+                class_id = '@Main_Menu_Text_Boxes', 
+                object_id = '#welcome_text_box'
+                )
+        )
+
         # Labels:
         self.title_Label = pg_gui.elements.UILabel(
-            pg.Rect((200, 200), (150, 50)), 
+            pg.Rect((60, 50), (650, 150)), 
             "Memory Processing Tool", 
             manager,
             container = self.main_menu_panel, 
@@ -61,7 +73,7 @@ class Menu_But:
                 )
             )
         
-    def but_pressed(self, but):
+    def but_pressed(self, but): # Function: Checks if button has been pressed and acts accordingly.
         if but == self.start_but:
             Login_and_Register.menu()
         if but == self.quit_but:
@@ -70,7 +82,7 @@ class Menu_But:
             
 but = Menu_But()
 
-def menu():
+def menu(): # Function: runs pygame and pygame_gui elements for this file.
     clock = pg.time.Clock()
     running = True
     while running:

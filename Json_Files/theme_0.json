@@ -65,6 +65,13 @@
              "text_shadow_offset": "0,0"
          }
      },
+     "@Main_Menu_Labels":
+     {
+        "font":
+        {
+            "size": 40
+        }
+     },
      "@Login_AND_Reg_Labels":
      {
         "font":
@@ -114,5 +121,9 @@
             "package": "Images",
             "resource": "age_time.png"
         }
+    },
+    "text_box":
+    {
+        
     }
 }

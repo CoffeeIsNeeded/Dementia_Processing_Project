@@ -52,13 +52,13 @@ class Graph:
         
         # Buttons:
         self.start_but = pg_gui.elements.UIButton(
-            pg.Rect((250, 250), BUTTON_SIZE), 
+            pg.Rect((450, 150), BUTTON_SIZE), 
             'START', 
             manager, 
             self.panel
             )
         self.quit_but = pg_gui.elements.UIButton(
-            pg.Rect((450, 250), BUTTON_SIZE), 
+            pg.Rect((630, 150), BUTTON_SIZE), 
             'QUIT', 
             manager, 
             self.panel
@@ -73,9 +73,33 @@ class Graph:
                 )
             )
         
+        # Text Boxes:
+        self.scatter_box = pg_gui.elements.UITextBox(
+            TEXT_ARRAY[4], 
+            pg.Rect((10, 10), (390, 350)), 
+            manager, 
+            starting_height = 1, 
+            container = self.panel, 
+            object_id = ObjectID(
+                class_id = '@Scatter_Text_Boxes', 
+                object_id = '#scatter_text_box'
+                )
+            )
+        self.results_scatter_box = pg_gui.elements.UITextBox(
+            TEXT_ARRAY[4], 
+            pg.Rect((420, 200), (350, 155)), 
+            manager, 
+            starting_height = 1, 
+            container = self.panel, 
+            object_id = ObjectID(
+                class_id = '@Scatter_Text_Boxes', 
+                object_id = '#results_scatter_text_box'
+                )
+            )
+
         # Labels:
         self.age_time_label = pg_gui.elements.UILabel(
-            pg.Rect((250, 100), (300, 50)), 
+            pg.Rect((440, 60), (300, 50)), 
             self.text, 
             manager, 
             self.panel,
@@ -121,11 +145,13 @@ class Graph:
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
         
 
-    def plot(self): # Function: Plots the scatter graph and saves it as an image.
+    def plot(self): # Function: Plots the scatter graph, gives it axis and saves it as an image.
         name ='age_time'
         plt.scatter(self.age, self.time)
+        plt.xlabel("Age /years")
+        plt.ylabel("Average Time /s")
         scatter = plt.gcf()
-        scatter.set_size_inches(4, 3)
+        scatter.set_size_inches(7.5, 3.5)
         plt.savefig(('Images/{}'.format(name)), dpi = 100)
         plt.close()
    

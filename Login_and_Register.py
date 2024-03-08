@@ -37,6 +37,9 @@ class Login:
         for user in users:
             self.DB_username.append(user[1])
             self.DB_password.append(user[2])
+        # Login and Register Variables:
+        self.reg_disabled = False
+        self.log_disabled = False
         # Maze game variables:
         self.game_start = True
         self.graph_start = False
@@ -54,10 +57,20 @@ class Login:
                 object_id = '#login_and_reg_panel'
                 )
             )
+        self.preview_panel = pg_gui.elements.UIPanel(
+            pg.Rect((10, 10), (780, 780)), 
+            1, 
+            manager,
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg Panels', 
+                object_id = '#preview_panel'
+                )
+        ) 
+        self.preview_panel.hide()
 
         # Text Entry:
         self.reg_username_entry = pg_gui.elements.UITextEntryLine(
-            pg.Rect((475, 275), BUTTON_SIZE), 
+            pg.Rect((465, 275), BUTTON_SIZE), 
             manager, 
             placeholder_text = "Username",
             container = self.reg_panel, 
@@ -67,7 +80,7 @@ class Login:
                 )
             )
         self.reg_password_entry = pg_gui.elements.UITextEntryLine(
-            pg.Rect((475, 325), BUTTON_SIZE), 
+            pg.Rect((465, 325), BUTTON_SIZE), 
             manager, 
             placeholder_text = "Password",
             container = self.reg_panel, 
@@ -77,7 +90,7 @@ class Login:
                 )
             )
         self.reg_age_entry = pg_gui.elements.UITextEntryLine(
-            pg.Rect((475, 375), BUTTON_SIZE), 
+            pg.Rect((465, 375), BUTTON_SIZE), 
             manager, 
             placeholder_text = "Age",
             container = self.reg_panel, 
@@ -87,7 +100,7 @@ class Login:
                 )
             ) 
         self.log_username_entry = pg_gui.elements.UITextEntryLine(
-            pg.Rect((225, 300), BUTTON_SIZE), 
+            pg.Rect((215, 300), BUTTON_SIZE), 
             manager, 
             placeholder_text = "Username",
             container = self.reg_panel, 
@@ -97,7 +110,7 @@ class Login:
                 )
             )
         self.log_password_entry = pg_gui.elements.UITextEntryLine(
-            pg.Rect((225, 350), BUTTON_SIZE), 
+            pg.Rect((215, 350), BUTTON_SIZE), 
             manager, 
             placeholder_text = "Password",
             container = self.reg_panel, 
@@ -109,7 +122,7 @@ class Login:
         
         # Text Labels
         self.log_Label = pg_gui.elements.UILabel(
-            pg.Rect((200, 200), (150, 50)), 
+            pg.Rect((190, 200), (150, 50)), 
             "Login", 
             manager,
             container = self.reg_panel, 
@@ -119,7 +132,7 @@ class Login:
                 )
             )
         self.reg_Label = pg_gui.elements.UILabel(
-            pg.Rect((450, 200), (150, 50)), 
+            pg.Rect((440, 200), (150, 50)), 
             "Register", 
             manager,
             container = self.reg_panel, 
@@ -129,24 +142,67 @@ class Login:
                 )
             )
         
+        # Text Boxes:
+        self.reg_text_box = pg_gui.elements.UITextBox(
+            TEXT_ARRAY[2], 
+            pg.Rect((580, 275), (190, 300)), 
+            manager, 
+            starting_height = 1, 
+            container = self.reg_panel, 
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg_Text_Boxes', 
+                object_id = '#reg_guide_text'
+                )
+        )
+
+        self.log_text_box = pg_gui.elements.UITextBox(
+            TEXT_ARRAY[1], 
+            pg.Rect((10, 275), (190, 300)), 
+            manager, 
+            starting_height = 1, 
+            container = self.reg_panel, 
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg_Text_Boxes', 
+                object_id = '#log_guide_text'
+                )
+        )
+
+        self.preview_text_box = pg_gui.elements.UITextBox(
+            TEXT_ARRAY[0], 
+            pg.Rect((20, 20), (750, 500)), 
+            manager, 
+            starting_height = 1, 
+            container = self.preview_panel, 
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg_Text_Boxes', 
+                object_id = '#preview_text'
+                )
+        )
+
         # Buttons:
         self.reg_but = pg_gui.elements.UIButton(
-            pg.Rect((475, 475), BUTTON_SIZE), 
+            pg.Rect((465, 475), BUTTON_SIZE), 
             'REGISTER', 
             manager,
             container = self.reg_panel
             )
         self.log_but = pg_gui.elements.UIButton(
-            pg.Rect((225, 475), BUTTON_SIZE), 
+            pg.Rect((215, 475), BUTTON_SIZE), 
             'LOGIN', 
             manager,
             container = self.reg_panel
             )
         self.back_but = pg_gui.elements.UIButton(
-            pg.Rect((350, 675), BUTTON_SIZE), 
+            pg.Rect((340, 675), BUTTON_SIZE), 
             'BACK', 
             manager,
             container = self.reg_panel
+            )
+        self.preview_but = pg_gui.elements.UIButton(
+            pg.Rect((340, 675), BUTTON_SIZE), 
+            'CONTINUE', 
+            manager,
+            container = self.preview_panel
             )
         
     def chk_text_entry(self, process, event): # Function: Checks if text has been entered into the text_entry boxes. 
@@ -172,12 +228,21 @@ class Login:
                     if self.age <= 130:
                         self.username = self.reg_username
                         self.password = self.reg_password
-                        self.game_start = True
-                        self.reg(connection)
-                        while self.game_start:
-                            self.game_loop()
-                        while self.graph_start:
-                            self.run_graph()
+                        self.reg_disabled = True
+                        self.reg_panel.hide()
+                        self.preview_panel.show()
+        if process == self.preview_but:
+            if self.reg_disabled == True:
+                self.game_start = True
+                self.reg(connection)
+                while self.game_start:
+                    self.game_loop()
+                while self.graph_start:
+                    self.run_graph()
+            elif self.log_disabled == True:
+                self.graph_start = True
+                while self.graph_start:
+                    Scatter_Menu(self.username, self.password)   
         if process == self.log_but: # Checks if information entered matches with user info in the database.
             n = -1
             self.game_start = False
@@ -186,9 +251,9 @@ class Login:
                 if self.log_username == name and self.log_password == self.DB_password[n]:
                     self.username = self.log_username
                     self.password = self.log_password
-                    self.graph_start = True
-            while self.graph_start:
-                Scatter_Menu(self.username, self.password)          
+                    self.log_disabled = True
+                    self.reg_panel.hide()
+                    self.preview_panel.show()       
         if process == self.back_but:
             return False
         

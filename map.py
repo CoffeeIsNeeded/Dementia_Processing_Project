@@ -22,7 +22,7 @@ maplayout1 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1]]
 
 maplayout2 = [[1, 1, 1, 1, 1, 1, 1, 1],
-             [3, _, _, _, _, _, 1, 1],
+             [1, _, _, _, _, _, 1, 1],
              [1, 1, 1, 1, 1, _, 1, 1],
              [1, 1, 1, 1, 1, _, 1, 1],
              [1, 1, 1, 1, 1, _, _, 2],
@@ -33,7 +33,7 @@ maplayout3 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, _, 2],
              [1, 1, 1, 1, 1, 1, _, 1],
-             [3, _, _, _, _, _, _, 1],
+             [1, _, _, _, _, _, _, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1]]
 
@@ -41,7 +41,7 @@ maplayout4 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, _, _, _, _, 2],
              [1, 1, 1, _, 1, 1, 1, 1],
              [1, 1, 1, _, 1, 1, 1, 1],
-             [3, _, _, _, 1, 1, 1, 1],
+             [1, _, _, _, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1]]
 
@@ -51,7 +51,7 @@ class Map:
         self.maplayout = maplayout
         self.mapfinal = {}
         self.mapfinalgrid = {}
-        self.mapfinal_start_end = {}
+        self.mapfinalend = {}
         self.finish_square = []
         self.get_map()
         self.x, self.y = PLAYER_POS
@@ -76,8 +76,8 @@ class Map:
             for i, value in enumerate(row):
                 if value is not None:
                     self.mapfinal[(i, j)] = value
-                    if (value == 2) or (value == 3):
-                        self.mapfinal_start_end[(i, j)] = value
+                    if value == 2:
+                        self.mapfinalend[(i, j)] = value
                 value2 = 4
                 self.mapfinalgrid[(i, j)] = value2
         
@@ -85,13 +85,11 @@ class Map:
         return time.time()
     
     def draw_start_end(self): # Function: draws end and start of map as coloured boxes.
-        for pos, value in self.mapfinal_start_end.items(): 
+        for pos, value in self.mapfinalend.items(): 
             match value:
                 case 2:
                     colour = (0, 255, 0, 1)
-                case 3:
-                    colour = (255, 0, 0, 1)
-            wall_pos = (25 + (pos[0] * 50), 300 + (pos[1] * 50), 50, 50)
+            wall_pos = (25 + (pos[0] * 50), 230 + (pos[1] * 50), 50, 50)
             pg.draw.rect(self.main.display, colour, wall_pos, 50)
 
     def draw_grid(self): # Function: draws map as a coloured grid.
@@ -99,7 +97,7 @@ class Map:
             match value:
                 case 4:
                     colour = (255, 255, 255, 1)
-            wall_pos = (25 + (pos[0] * 50), 300 + (pos[1] * 50), 50, 50)
+            wall_pos = (25 + (pos[0] * 50), 230 + (pos[1] * 50), 50, 50)
             pg.draw.rect(self.main.display, colour, wall_pos, 5)
 
     def draw(self): # Draws all elements of the map.
@@ -110,9 +108,7 @@ class Map:
                     colour = (72, 102, 120, 1)
                 case 2:
                     colour = (0, 255, 0, 1)
-                case 3: 
-                    colour = (255, 0, 0, 1)
-            wall_pos = (25 +(pos[0] * 50), 300 + (pos[1] * 50), 50, 50)
+            wall_pos = (25 + (pos[0] * 50), 230 + (pos[1] * 50), 50, 50)
             
             time = self.return_time()
             if time > self.time_end: # draws the map normally up until this point, here the map grid, start and end are finally able to be seen.
