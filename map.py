@@ -3,7 +3,8 @@ from settings import *
 import random
 import time
 
-_ = None
+# All 4 2D arrays indicating the layout of the map:
+_ = None # Acting as a null value.
 maplayout = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, _, _, _, _, _, _, 1],
              [1, _, _, _, _, _, _, 1],
@@ -21,7 +22,7 @@ maplayout1 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1]]
 
 maplayout2 = [[1, 1, 1, 1, 1, 1, 1, 1],
-             [1, _, _, _, _, _, 1, 1],
+             [3, _, _, _, _, _, 1, 1],
              [1, 1, 1, 1, 1, _, 1, 1],
              [1, 1, 1, 1, 1, _, 1, 1],
              [1, 1, 1, 1, 1, _, _, 2],
@@ -32,7 +33,7 @@ maplayout3 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, _, 2],
              [1, 1, 1, 1, 1, 1, _, 1],
-             [1, _, _, _, _, _, _, 1],
+             [3, _, _, _, _, _, _, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1]]
 
@@ -40,21 +41,23 @@ maplayout4 = [[1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, _, _, _, _, 2],
              [1, 1, 1, _, 1, 1, 1, 1],
              [1, 1, 1, _, 1, 1, 1, 1],
-             [1, _, _, _, 1, 1, 1, 1],
+             [3, _, _, _, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1]]
 
 class Map:
-    def __init__(self, main):
+    def __init__(self, main): # Initialising variables
         self.main = main
         self.maplayout = maplayout
         self.mapfinal = {}
+        self.mapfinalgrid = {}
+        self.mapfinal_start_end = {}
         self.finish_square = []
         self.get_map()
         self.x, self.y = PLAYER_POS
         self.time_end = (self.return_time() + 10)
         
-    def get_map(self):
+    def get_map(self): # Function: randomly selects an integer which will choose a randmly selected maplayout as well as the finish square for the map.
         rannum = random.randint(1, 4)
         if rannum == 1:
             self.maplayout = maplayout1
@@ -69,24 +72,51 @@ class Map:
             self.maplayout = maplayout4
             self.finish_square = 7, 1
             
-        for j, row in enumerate(self.maplayout):
+        for j, row in enumerate(self.maplayout): # Appends to a dictionary the coordinates of the walls of the maze with the wall value.
             for i, value in enumerate(row):
                 if value is not None:
                     self.mapfinal[(i, j)] = value
+                    if (value == 2) or (value == 3):
+                        self.mapfinal_start_end[(i, j)] = value
+                value2 = 4
+                self.mapfinalgrid[(i, j)] = value2
         
-    def return_time(self):
+    def return_time(self): # Function: returns current time.
         return time.time()
     
-    def draw(self):
-        for pos, value in self.mapfinal.items():
+    def draw_start_end(self): # Function: draws end and start of map as coloured boxes.
+        for pos, value in self.mapfinal_start_end.items(): 
             match value:
+                case 2:
+                    colour = (0, 255, 0, 1)
+                case 3:
+                    colour = (255, 0, 0, 1)
+            wall_pos = (25 + (pos[0] * 50), 300 + (pos[1] * 50), 50, 50)
+            pg.draw.rect(self.main.display, colour, wall_pos, 50)
+
+    def draw_grid(self): # Function: draws map as a coloured grid.
+        for pos, value in self.mapfinalgrid.items(): 
+            match value:
+                case 4:
+                    colour = (255, 255, 255, 1)
+            wall_pos = (25 + (pos[0] * 50), 300 + (pos[1] * 50), 50, 50)
+            pg.draw.rect(self.main.display, colour, wall_pos, 5)
+
+    def draw(self): # Draws all elements of the map.
+        self.draw_grid()
+        for pos, value in self.mapfinal.items(): # For every position in self.mapfinal.items() a coloured box is drawn.
+            match value: # Allows different boxes to be different colours.
                 case 1:
                     colour = (72, 102, 120, 1)
                 case 2:
                     colour = (0, 255, 0, 1)
-            aabb = (pos[0] * 40, pos[1] * 40, 40, 40)
+                case 3: 
+                    colour = (255, 0, 0, 1)
+            wall_pos = (25 +(pos[0] * 50), 300 + (pos[1] * 50), 50, 50)
             
             time = self.return_time()
-            if time > self.time_end:
+            if time > self.time_end: # draws the map normally up until this point, here the map grid, start and end are finally able to be seen.
                 colour = (STAND_BACK_COL)
-            pg.draw.rect(self.main.display, colour, aabb, 40)
+                self.draw_grid()
+                self.draw_start_end()
+            pg.draw.rect(self.main.display, colour, wall_pos, 50)

@@ -10,7 +10,7 @@ import Database
 from settings import *
 
 pg.init()
-pg.display.set_caption('Dementia Project')
+pg.display.set_caption('Memory Processing Tool')
 display = pg.display.set_mode((RES))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
@@ -18,11 +18,11 @@ display.fill((STAND_BACK_COL))
 manager = pg_gui.UIManager((RES), THEME_PATH)
 manager.get_theme().load_theme(THEME_PATH)
 
-connection = Database.connect()
-Database.create_tables(connection)
+connection = Database.connect() # Connects to the database.
+Database.create_tables(connection) # Creates database tables if not already created.
 
 class Graph:
-    def __init__(self):
+    def __init__(self): # Initalising Variables
         self.username = ""
         self.password = ""
         self.text = ""
@@ -30,6 +30,7 @@ class Graph:
         self.time = []
         
         # ------GUI:------
+        # Panels: 
         self.graph_panel = pg_gui.elements.UIPanel(
             pg.Rect((10, 10), (790, 380)), 
             1, 
@@ -74,7 +75,7 @@ class Graph:
         
         # Labels:
         self.age_time_label = pg_gui.elements.UILabel(
-            pg.Rect((350, 100), (100, 50)), 
+            pg.Rect((250, 100), (300, 50)), 
             self.text, 
             manager, 
             self.panel,
@@ -85,21 +86,22 @@ class Graph:
             )
 
     def time_age(self):
-        users = Database.get_all_age_y_time(connection)
-        logged_user = Database.get_user(connection, self.username, self.password)
+        users = Database.get_all_age_y_time(connection) # Getting all user age and average time values from Database
+        # Getting current user average time and age values:
+        logged_user = Database.get_user(connection, self.username, self.password) 
         user_avg_time = logged_user[0][7]
         user_age = logged_user[0][3]
-        
+        # Appending all times and ages to two arrays as values to be plotted on the scatter graph:
         for user in users:
             self.age.append(user[0])
             self.time.append(user[1])
-            
+        # Working out quartile values for the time and age arrays for all users:  
         age_quantiles = np.quantile(self.age, [0, 0.25, 0.5, 0.75, 1])
         time_quantiles = np.quantile(self.time, [0, 0.25, 0.5, 0.75, 1])
-        
+        # Working out where the current users results are in comparision with the quartiles and judging the users time and age values according to that:
         if time_quantiles[0] <= user_avg_time < time_quantiles[1]:
             self.text = "Very Low Risk, High Processing Speed"
-            pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
+            pg_gui.elements.UILabel.set_text(self.age_time_label, self.text) # The label is changed for the user to read depending on thier results.
         elif time_quantiles[1] <= user_avg_time < time_quantiles[2]:
             self.text = "Low Risk, Normal Processing Speed"
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
@@ -119,7 +121,7 @@ class Graph:
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
         
 
-    def plot(self):
+    def plot(self): # Function: Plots the scatter graph and saves it as an image.
         name ='age_time'
         plt.scatter(self.age, self.time)
         scatter = plt.gcf()
@@ -127,20 +129,20 @@ class Graph:
         plt.savefig(('Images/{}'.format(name)), dpi = 100)
         plt.close()
    
-    def but_pressed(self, but):
+    def but_pressed(self, but): # Function: Checks if a specific button has been pressed and does the following action if one has.
         if but == self.start_but:
-            self.run()
+            self.run() # Runs the function run() which will plot and save a graph as well as giving the user a prompt on-screen depending on thier performance.
         if but == self.quit_but:
             pg.quit()
             sys.exit()
 
-    def run(self):
+    def run(self): # Function: Runs the functions time_age() and plot() when active.
         self.time_age()
         self.plot()
     
 but = Graph()
 
-def menu(username, password):
+def menu(username, password): # Function: Runs the pygame loop and the pygame_gui UI elements for this specific file, as well as passing the username and password to the function time_age().
     but.username = username
     but.password = password
     clock = pg.time.Clock()

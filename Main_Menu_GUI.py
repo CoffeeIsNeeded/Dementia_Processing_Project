@@ -15,9 +15,24 @@ manager = MANAGER
 
 class Menu_But:
     def __init__(self):
+        # ------GUI:------
+        # Panels:
+        self.main_menu_panel = pg_gui.elements.UIPanel(
+            pg.Rect((10, 10), (780, 780)), 
+            1, 
+            manager,
+            object_id = ObjectID(
+                class_id = '@Main_Menu Panels', 
+                object_id = '#main_menu_panel'
+                )
+            )
+        
+        # Buttons:
         self.start_but = pg_gui.elements.UIButton(
             pg.Rect((350, 375), BUTTON_SIZE), 
-            'START', manager, 
+            'START', 
+            manager,
+            container = self.main_menu_panel, 
             object_id = ObjectID(
                 class_id = '@Main_Menu_Buttons', 
                 object_id = '#start_Button'
@@ -26,10 +41,23 @@ class Menu_But:
         self.quit_but = pg_gui.elements.UIButton(
             pg.Rect((350, 575), BUTTON_SIZE), 
             'QUIT', 
-            manager, 
+            manager,
+            container = self.main_menu_panel, 
             object_id = ObjectID(
                 class_id = '@Main_Menu_Buttons', 
                 object_id = '#quit_Button'
+                )
+            )
+        
+        # Labels:
+        self.title_Label = pg_gui.elements.UILabel(
+            pg.Rect((200, 200), (150, 50)), 
+            "Memory Processing Tool", 
+            manager,
+            container = self.main_menu_panel, 
+            object_id = ObjectID(
+                class_id = '@Main_Menu_Labels', 
+                object_id = '#title_label'
                 )
             )
         

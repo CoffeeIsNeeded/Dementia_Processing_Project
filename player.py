@@ -23,20 +23,16 @@ class Player:
             key = pg.key.get_pressed()
             if key[pg.K_UP]:
                 y_change -= 1
-                pg.time.wait(500)
-                self.time_total += 500
+                pg.time.wait(250)
             if key[pg.K_DOWN]:
                 y_change += 1
-                pg.time.wait(500)
-                self.time_total += 500
+                pg.time.wait(250)
             if key[pg.K_LEFT]:
                 x_change -= 1
-                pg.time.wait(500)
-                self.time_total += 500
+                pg.time.wait(250)
             if key[pg.K_RIGHT]:
                 x_change += 1
-                pg.time.wait(500)
-                self.time_total += 500
+                pg.time.wait(250)
 
             self.wall_collision(x_change, y_change)
 
@@ -73,8 +69,8 @@ class Player:
         self.movement()
     
     def draw(self):
-        pg.draw.circle(self.main.display, (121, 52, 158, 1), (self.x * 40, self.y * 40), 15)
-        pg.draw.circle(self.main.display, (196, 87, 255, 1), (self.x * 40, self.y * 40), 10)
+        pg.draw.circle(self.main.display, (121, 52, 158, 1), (25 + (self.x * 50), 300 + (self.y * 50)), 19)
+        pg.draw.circle(self.main.display, (196, 87, 255, 1), (25 + (self.x * 50), 300 + (self.y * 50)), 13)
     
     @property
     def pos(self):

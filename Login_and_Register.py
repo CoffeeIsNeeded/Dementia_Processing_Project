@@ -21,11 +21,15 @@ running = True
 connection = Database.connect()
 
 class Login:
-    def __init__(self, connection):
+    def __init__(self, connection): # Initalising Variables
         # Database Variables:
         self.connection = connection
         self.username = ""
         self.password = ""
+        self.log_username = ""
+        self.log_password = ""
+        self.reg_username = ""
+        self.reg_password = ""
         self.age = 0
         self.DB_username = []
         self.DB_password = []
@@ -40,11 +44,23 @@ class Login:
         self.time_array = []
         
         # --------- GUI: ---------
+        # Panels:
+        self.reg_panel = pg_gui.elements.UIPanel(
+            pg.Rect((10, 10), (780, 780)), 
+            1, 
+            manager,
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg Panels', 
+                object_id = '#login_and_reg_panel'
+                )
+            )
+
         # Text Entry:
         self.reg_username_entry = pg_gui.elements.UITextEntryLine(
             pg.Rect((475, 275), BUTTON_SIZE), 
             manager, 
-            placeholder_text = "Username", 
+            placeholder_text = "Username",
+            container = self.reg_panel, 
             object_id = ObjectID(
                 class_id = '@Register_Text_Entry', 
                 object_id = '#reg_username_entry'
@@ -53,7 +69,8 @@ class Login:
         self.reg_password_entry = pg_gui.elements.UITextEntryLine(
             pg.Rect((475, 325), BUTTON_SIZE), 
             manager, 
-            placeholder_text = "Password", 
+            placeholder_text = "Password",
+            container = self.reg_panel, 
             object_id = ObjectID(
                 class_id = '@Register_Text_Entry', 
                 object_id = '#reg_password_entry'
@@ -62,7 +79,8 @@ class Login:
         self.reg_age_entry = pg_gui.elements.UITextEntryLine(
             pg.Rect((475, 375), BUTTON_SIZE), 
             manager, 
-            placeholder_text = "Age", 
+            placeholder_text = "Age",
+            container = self.reg_panel, 
             object_id = ObjectID(
                 class_id = '@Register_Text_Entry', 
                 object_id = '#reg_age_entry'
@@ -71,7 +89,8 @@ class Login:
         self.log_username_entry = pg_gui.elements.UITextEntryLine(
             pg.Rect((225, 300), BUTTON_SIZE), 
             manager, 
-            placeholder_text = "Username", 
+            placeholder_text = "Username",
+            container = self.reg_panel, 
             object_id = ObjectID(
                 class_id = '@Login_Text_Entry', 
                 object_id = '#log_username_entry'
@@ -80,7 +99,8 @@ class Login:
         self.log_password_entry = pg_gui.elements.UITextEntryLine(
             pg.Rect((225, 350), BUTTON_SIZE), 
             manager, 
-            placeholder_text = "Password", 
+            placeholder_text = "Password",
+            container = self.reg_panel, 
             object_id = ObjectID(
                 class_id = '@Login_Text_Entry', 
                 object_id = '#log_password_entry'
@@ -89,20 +109,22 @@ class Login:
         
         # Text Labels
         self.log_Label = pg_gui.elements.UILabel(
-            pg.Rect((225, 200), BUTTON_SIZE), 
+            pg.Rect((200, 200), (150, 50)), 
             "Login", 
-            manager, 
+            manager,
+            container = self.reg_panel, 
             object_id = ObjectID(
                 class_id = '@Login_AND_Reg_Labels', 
                 object_id = '#log_label'
                 )
             )
         self.reg_Label = pg_gui.elements.UILabel(
-            pg.Rect((475, 200), BUTTON_SIZE), 
+            pg.Rect((450, 200), (150, 50)), 
             "Register", 
-            manager, 
+            manager,
+            container = self.reg_panel, 
             object_id = ObjectID(
-                class_id = '@Log_AND_Reg_Labels', 
+                class_id = '@Login_AND_Reg_Labels', 
                 object_id = '#reg_label'
                 )
             )
@@ -111,22 +133,32 @@ class Login:
         self.reg_but = pg_gui.elements.UIButton(
             pg.Rect((475, 475), BUTTON_SIZE), 
             'REGISTER', 
-            manager)
+            manager,
+            container = self.reg_panel
+            )
         self.log_but = pg_gui.elements.UIButton(
             pg.Rect((225, 475), BUTTON_SIZE), 
             'LOGIN', 
-            manager)
+            manager,
+            container = self.reg_panel
+            )
         self.back_but = pg_gui.elements.UIButton(
             pg.Rect((350, 675), BUTTON_SIZE), 
             'BACK', 
-            manager)
+            manager,
+            container = self.reg_panel
+            )
         
     def chk_text_entry(self, process, event): # Function: Checks if text has been entered into the text_entry boxes. 
         # Changes either the username, password or age to the text inputted to the text_entry box.
-        if process == self.reg_username_entry or process == self.log_username_entry: 
-            self.username = event.text
-        if process == self.reg_password_entry or process == self.log_password_entry:
-            self.password = event.text
+        if process == self.reg_username_entry: 
+            self.reg_username = event.text
+        if process == self.reg_password_entry:
+            self.reg_password = event.text
+        if process == self.log_username_entry: 
+            self.log_username = event.text
+        if process == self.log_password_entry:
+            self.log_password = event.text
         if process == self.reg_age_entry:
             try:
                 self.age = int(event.text)
@@ -135,9 +167,11 @@ class Login:
             
     def but(self, process): # Checks if a button is pressed and carries out the appropriate response.
         if process == self.reg_but: # Registers user information to the database if the appropriate conditions are met then: Starts the Maze game loop (Main.py); Starts Scatter graph file (Scatter.py)
-            if self.username not in self.DB_username:
-                if (" " not in self.username) and (" " not in self.password):
+            if self.reg_username not in self.DB_username:
+                if (" " not in self.reg_username) and (" " not in self.reg_password):
                     if self.age <= 130:
+                        self.username = self.reg_username
+                        self.password = self.reg_password
                         self.game_start = True
                         self.reg(connection)
                         while self.game_start:
@@ -149,7 +183,9 @@ class Login:
             self.game_start = False
             for name in self.DB_username:
                 n += 1
-                if self.username == name and self.password == self.DB_password[n]:
+                if self.log_username == name and self.log_password == self.DB_password[n]:
+                    self.username = self.log_username
+                    self.password = self.log_password
                     self.graph_start = True
             while self.graph_start:
                 Scatter_Menu(self.username, self.password)          
@@ -175,13 +211,13 @@ class Login:
         Database.get_times_from_user(self.connection, self.time_array[0], self.time_array[1], self.time_array[2], t_avg, self.username, self.password)
         Scatter_Menu(self.username, self.password)
 
-    def reg(self, connection): # Function: 
+    def reg(self, connection): # Function: runs a database.py function add_user() to submit the username, password and age values into the database as a new user.
         null = 0
         Database.add_user(self.connection, self.username, self.password, self.age, null, null, null, null, null)
     
 process = Login(connection)
 
-def menu():
+def menu():# Function: Runs the pygame loop and the pygame_gui UI elements for this specific file
     clock = pg.time.Clock()
     running = True
     while running:
