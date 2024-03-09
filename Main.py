@@ -48,7 +48,7 @@ class Main:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-    
+                
     def arrows(self): # Function: Contains a 2D array of gui element positions for arrows and passes the singular arrays as an argument to anotherfunction to be displayed.
         arrows = [
             [
@@ -91,7 +91,9 @@ class Main:
             ["Press the RIGHT",  "ARROW button on the",  "keyboard to move 1", "space right"],
             ["Press the LEFT",  "ARROW button on the",  "keyboard to move 1", "space left"]
             ]
-
+        title = "Welcome to the MAZE PAGE" 
+        keyboard_guide = "Keyboard Buttons"
+            
         n = 0
         i = -45
         for paragraph in paragraphs:
@@ -99,7 +101,8 @@ class Main:
             for text in paragraph:
                 n += 20
                 self.display.blit(self.paragraph_font.render(text, True, self.white), (600, 115 + n + i))
-        self.display.blit(self.title_font.render('Keyboard Buttons', True, self.white), (540, 50))
+        self.display.blit(self.title_font.render(keyboard_guide, True, self.white), (540, 50))
+        self.display.blit(self.title_font.render(title, True, self.white), (75, 50))
 
     def draw_game(self): # Function: draws screen background, player and map from thier respective sources.
         self.display.fill(STAND_BACK_COL)
@@ -122,13 +125,18 @@ class Main:
     
     def run(self): # Function: Runs the maze and records the time taken to complete the maze after a completion as self.time_taken
         time_start = self.record_time()
+        time_stuck = self.record_time() + 300
         self.running = True
         while self.running == True:
             self.chk_game_events()
             self.update_game()
             self.draw_game()
             self.clock.tick(60)
-            if self.player.game_stop == True:
+            if time_stuck < self.record_time() or self.player.game_stop == True:
                 time_end = self.record_time()
                 self.time_taken = (time_end - time_start)
                 self.running = False
+                
+if __name__ == "__main__":
+    main = Main()
+    main.run()

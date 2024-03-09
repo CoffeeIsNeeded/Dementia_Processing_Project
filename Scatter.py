@@ -26,6 +26,7 @@ class Graph:
         self.username = ""
         self.password = ""
         self.text = ""
+        self.results_output = 0
         self.age = []
         self.time = []
         
@@ -52,17 +53,18 @@ class Graph:
         
         # Buttons:
         self.start_but = pg_gui.elements.UIButton(
-            pg.Rect((450, 150), BUTTON_SIZE), 
+            pg.Rect((250, 70), BUTTON_SIZE), 
             'START', 
             manager, 
             self.panel
             )
         self.quit_but = pg_gui.elements.UIButton(
-            pg.Rect((630, 150), BUTTON_SIZE), 
+            pg.Rect((430, 70), BUTTON_SIZE), 
             'QUIT', 
             manager, 
             self.panel
             )
+        self.quit_but.hide()
         self.image_but = pg_gui.elements.UIButton(
             pg.Rect((0, 0), (790, 380)), 
             '', 
@@ -74,9 +76,9 @@ class Graph:
             )
         
         # Text Boxes:
-        self.scatter_box = pg_gui.elements.UITextBox(
+        self.scatter_text_box = pg_gui.elements.UITextBox(
             TEXT_ARRAY[4], 
-            pg.Rect((10, 10), (390, 350)), 
+            pg.Rect((10, 140), (760, 220)), 
             manager, 
             starting_height = 1, 
             container = self.panel, 
@@ -85,21 +87,10 @@ class Graph:
                 object_id = '#scatter_text_box'
                 )
             )
-        self.results_scatter_box = pg_gui.elements.UITextBox(
-            TEXT_ARRAY[4], 
-            pg.Rect((420, 200), (350, 155)), 
-            manager, 
-            starting_height = 1, 
-            container = self.panel, 
-            object_id = ObjectID(
-                class_id = '@Scatter_Text_Boxes', 
-                object_id = '#results_scatter_text_box'
-                )
-            )
 
         # Labels:
         self.age_time_label = pg_gui.elements.UILabel(
-            pg.Rect((440, 60), (300, 50)), 
+            pg.Rect((240, 30), (300, 25)), 
             self.text, 
             manager, 
             self.panel,
@@ -125,23 +116,29 @@ class Graph:
         # Working out where the current users results are in comparision with the quartiles and judging the users time and age values according to that:
         if time_quantiles[0] <= user_avg_time < time_quantiles[1]:
             self.text = "Very Low Risk, High Processing Speed"
+            self.results_output = 0
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text) # The label is changed for the user to read depending on thier results.
-        elif time_quantiles[1] <= user_avg_time < time_quantiles[2]:
-            self.text = "Low Risk, Normal Processing Speed"
+        if time_quantiles[1] <= user_avg_time < time_quantiles[2]:
+            self.text = "Low Risk, Average Processing Speed"
+            self.results_output = 1
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
-        elif time_quantiles[2] <= user_avg_time < time_quantiles[3]:
+        if time_quantiles[2] <= user_avg_time < time_quantiles[3]:
             self.text = "Slow Processing Speed, "
             if age_quantiles[2] <= user_age <= age_quantiles[4]:
                 self.text = self.text + "Average Risk"
+                self.results_output = 2
             else:
                 self.text = self.text + "Low Risk"
+                self.results_output = 3
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
-        elif time_quantiles[3] <= user_avg_time < time_quantiles[4]:
+        if time_quantiles[3] <= user_avg_time < time_quantiles[4]:
             self.text = "Very Slow Processing Speed, "
             if age_quantiles[2] <= user_age <= age_quantiles[4]:
                 self.text = self.text + "High Risk"
+                self.results_output = 4
             else:
-                self.text = self.text + "Low Risk"
+                self.text = self.text + "Above Average Risk"
+                self.results_output = 5
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
         
 
@@ -157,7 +154,12 @@ class Graph:
    
     def but_pressed(self, but): # Function: Checks if a specific button has been pressed and does the following action if one has.
         if but == self.start_but:
+            print(self.results_output)
+            self.scatter_text_box.append_html_text(TEXT_ARRAY[5])
+            self.scatter_text_box.append_html_text(RESULTS_TEXT_ARRAY[self.results_output])
             self.run() # Runs the function run() which will plot and save a graph as well as giving the user a prompt on-screen depending on thier performance.
+            self.start_but.hide()
+            self.quit_but.show()
         if but == self.quit_but:
             pg.quit()
             sys.exit()

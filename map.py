@@ -88,7 +88,7 @@ class Map:
         for pos, value in self.mapfinalend.items(): 
             match value:
                 case 2:
-                    colour = (0, 255, 0, 1)
+                    colour = (0, 0, 0, 0)
             wall_pos = (25 + (pos[0] * 50), 230 + (pos[1] * 50), 50, 50)
             pg.draw.rect(self.main.display, colour, wall_pos, 50)
 
@@ -107,7 +107,7 @@ class Map:
                 case 1:
                     colour = (72, 102, 120, 1)
                 case 2:
-                    colour = (0, 255, 0, 1)
+                    colour = (0, 0, 0, 0)
             wall_pos = (25 + (pos[0] * 50), 230 + (pos[1] * 50), 50, 50)
             
             time = self.return_time()

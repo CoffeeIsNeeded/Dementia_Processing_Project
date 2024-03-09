@@ -8,14 +8,10 @@
             "disabled_bg":"#25292e",
             "selected_bg":"#193754",
             "dark_bg":"#15191e",
-            "normal_text":"#c5cbd8",
+            "normal_text":"#d9e4ff",
             "hovered_text":"#FFFFFF",
             "selected_text":"#FFFFFF",
             "disabled_text":"#6d736f",
-            "link_text": "#0000EE",
-            "link_hover": "#2020FF",
-            "link_selected": "#551A8B",
-            "text_shadow": "#777777",
             "normal_border": "#DDDDDD",
             "hovered_border": "#B0B0B0",
             "disabled_border": "#808080",
@@ -44,12 +40,6 @@
     },
     "label":
      {
-         "colours":
-         {
-             "dark_bg": "#25292e",
-             "normal_text": "#c5cbd8",
-             "text_shadow": "#505050"
-         },
          "font":
          {
              "name": "times new roman",
@@ -85,20 +75,6 @@
              "text_shadow_offset": "0,0"
          }
     }, 
-    "#reg_label":
-    {
-        "colours":
-        {
-            "normal_text": "#c5cbd8" 
-        }
-    },
-    "#log_label":
-    {
-        "colours":
-        {
-            "normal_text": "#c5cbd8"  
-        }
-    },
     "@Scatter Labels":
     {
         "font":
@@ -121,9 +97,5 @@
             "package": "Images",
             "resource": "age_time.png"
         }
-    },
-    "text_box":
-    {
-        
     }
 }
