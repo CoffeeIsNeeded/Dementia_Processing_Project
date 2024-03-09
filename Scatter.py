@@ -90,7 +90,7 @@ class Graph:
 
         # Labels:
         self.age_time_label = pg_gui.elements.UILabel(
-            pg.Rect((240, 30), (300, 25)), 
+            pg.Rect((220, 30), (340, 25)), 
             self.text, 
             manager, 
             self.panel,
@@ -154,10 +154,10 @@ class Graph:
    
     def but_pressed(self, but): # Function: Checks if a specific button has been pressed and does the following action if one has.
         if but == self.start_but:
+            self.run() # Runs the function run() which will plot and save a graph as well as giving the user a prompt on-screen depending on thier performance.
             print(self.results_output)
             self.scatter_text_box.append_html_text(TEXT_ARRAY[5])
             self.scatter_text_box.append_html_text(RESULTS_TEXT_ARRAY[self.results_output])
-            self.run() # Runs the function run() which will plot and save a graph as well as giving the user a prompt on-screen depending on thier performance.
             self.start_but.hide()
             self.quit_but.show()
         if but == self.quit_but:

@@ -75,6 +75,13 @@
              "text_shadow_offset": "0,0"
          }
     }, 
+    "#error_label":
+    {
+        "font":
+        {
+            "size": 12
+        }
+    },
     "@Scatter Labels":
     {
         "font":

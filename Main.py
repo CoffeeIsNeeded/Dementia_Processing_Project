@@ -1,6 +1,5 @@
 import pygame as pg
 import pygame_gui as pg_gui
-from textwrap import fill
 import time
 import sys
 
@@ -20,6 +19,7 @@ class Main:
         self.manager = pg_gui.UIManager((RES))
         self.game_start = True
         self.running = True
+        self.completion = 0
         
         # ------GUI:------
         # Colours:
@@ -48,7 +48,15 @@ class Main:
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-                
+
+    def draw_time_finished(self):
+        values = (200, 300, 400, 200)
+        pg.draw.rect(self.display, self.normal_bg, values, 400)
+        pg.draw.rect(self.display, self.dark_bg, values, 25)
+        self.display.blit(self.title_font.render("Time Finished!", True, self.white), (320, 350))
+        self.display.blit(self.title_font.render("Wait 10 seconds to be taken", True, self.white), (250, 400))
+        self.display.blit(self.title_font.render("to the next maze.", True, self.white), (250, 420))
+
     def arrows(self): # Function: Contains a 2D array of gui element positions for arrows and passes the singular arrays as an argument to anotherfunction to be displayed.
         arrows = [
             [
@@ -93,6 +101,7 @@ class Main:
             ]
         title = "Welcome to the MAZE PAGE" 
         keyboard_guide = "Keyboard Buttons"
+        completion_text = (str(self.completion_text) + "/3 mazes completed")
             
         n = 0
         i = -45
@@ -103,6 +112,7 @@ class Main:
                 self.display.blit(self.paragraph_font.render(text, True, self.white), (600, 115 + n + i))
         self.display.blit(self.title_font.render(keyboard_guide, True, self.white), (540, 50))
         self.display.blit(self.title_font.render(title, True, self.white), (75, 50))
+        self.display.blit(self.title_font.render(completion_text, True, self.white), (520, 670))
 
     def draw_game(self): # Function: draws screen background, player and map from thier respective sources.
         self.display.fill(STAND_BACK_COL)
@@ -123,20 +133,21 @@ class Main:
         self.arrows()
         self.draw_text()
     
-    def run(self): # Function: Runs the maze and records the time taken to complete the maze after a completion as self.time_taken
+    def run(self, completions): # Function: Runs the maze and records the time taken to complete the maze after a completion as self.time_taken
+        self.completion_text = completions
         time_start = self.record_time()
-        time_stuck = self.record_time() + 300
+        time_5m = self.record_time() + 300
+        time_5m30s = time_5m + 10
         self.running = True
         while self.running == True:
             self.chk_game_events()
             self.update_game()
             self.draw_game()
             self.clock.tick(60)
-            if time_stuck < self.record_time() or self.player.game_stop == True:
+            if time_5m < self.record_time():
+                self.draw_time_finished()
+            if time_5m30s < self.record_time() or self.player.game_stop == True:
                 time_end = self.record_time()
                 self.time_taken = (time_end - time_start)
+                self.completion = 1
                 self.running = False
-                
-if __name__ == "__main__":
-    main = Main()
-    main.run()

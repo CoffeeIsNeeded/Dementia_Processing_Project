@@ -44,6 +44,7 @@ class Login:
         self.game_start = True
         self.graph_start = False
         self.count = 3
+        self.completions = 0
         self.time_array = []
         
         # --------- GUI: ---------
@@ -141,7 +142,18 @@ class Login:
                 object_id = '#reg_label'
                 )
             )
-        
+        self.text = ""
+        self.error_Label = pg_gui.elements.UILabel(
+            pg.Rect((140, 550), (500, 50)), 
+            self.text, 
+            manager,
+            container = self.reg_panel, 
+            object_id = ObjectID(
+                class_id = '@Login_AND_Reg_Labels', 
+                object_id = '#error_label'
+                )
+            )
+
         # Text Boxes:
         self.reg_text_box = pg_gui.elements.UITextBox(
             TEXT_ARRAY[2], 
@@ -223,6 +235,7 @@ class Login:
             
     def but(self, process): # Checks if a button is pressed and carries out the appropriate response.
         if process == self.reg_but: # Registers user information to the database if the appropriate conditions are met then: Starts the Maze game loop (Main.py); Starts Scatter graph file (Scatter.py)
+            self.text = ""
             if self.reg_username not in self.DB_username:
                 if (" " not in self.reg_username) and (" " not in self.reg_password):
                     if self.age <= 130:
@@ -231,6 +244,13 @@ class Login:
                         self.reg_disabled = True
                         self.reg_panel.hide()
                         self.preview_panel.show()
+                    else:
+                        self.text = "Age too large or is not a number"
+                else:
+                    self.text = "Spaces found in username or password."
+            else:
+                self.text = "Username already in use."
+            pg_gui.elements.UILabel.set_text(self.error_Label, self.text)
         if process == self.preview_but:
             if self.reg_disabled == True:
                 self.game_start = True
@@ -242,8 +262,9 @@ class Login:
             elif self.log_disabled == True:
                 self.graph_start = True
                 while self.graph_start:
-                    Scatter_Menu(self.username, self.password)   
+                    Scatter_Menu(self.username, self.password)
         if process == self.log_but: # Checks if information entered matches with user info in the database.
+            self.text = ""
             n = -1
             self.game_start = False
             for name in self.DB_username:
@@ -253,15 +274,20 @@ class Login:
                     self.password = self.log_password
                     self.log_disabled = True
                     self.reg_panel.hide()
-                    self.preview_panel.show()       
+                    self.preview_panel.show()    
+                else:
+                    self.text = "Invalid username or password."
+            pg_gui.elements.UILabel.set_text(self.error_Label, self.text)
         if process == self.back_but:
             return False
-        
+
     def game_loop(self): # Function: runs the maze in main 3 times and each time recorded is appended to a time_array, then starts the scatter graph file.
         if self.count != 0:
             main = Main()
-            main.run()
+            main.run(self.completions)
             time = main.time_taken
+            completion = main.completion
+            self.completions += completion
             self.time_array.append(time)
             self.count -= 1
         elif self.count == 0:

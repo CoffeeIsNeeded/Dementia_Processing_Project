@@ -72,7 +72,7 @@ class Menu_But:
                 object_id = '#title_label'
                 )
             )
-        
+                                      
     def but_pressed(self, but): # Function: Checks if button has been pressed and acts accordingly.
         if but == self.start_but:
             Login_and_Register.menu()
@@ -80,7 +80,7 @@ class Menu_But:
             pg.quit()
             sys.exit()
             
-but = Menu_But()
+but = Menu_But()             
 
 def menu(): # Function: runs pygame and pygame_gui elements for this file.
     clock = pg.time.Clock()
