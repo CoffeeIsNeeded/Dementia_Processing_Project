@@ -42,7 +42,6 @@ class Player:
         return (x, y) not in self.main.map.mapfinal
     
     def wall_collision(self, x_change, y_change): # Function: Adds the movement values to x and y, checks if player has hit the finish, checks if a player has hit the wall and updates the x and y values accordingly.
-
         if self.wall_check(int(self.x + x_change), int(self.y)):
             self.x += x_change
         elif self.finish_check((self.x), (self.y)) == [int(self.x + x_change), int(self.y)]:

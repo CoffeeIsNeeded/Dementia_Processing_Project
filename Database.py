@@ -1,9 +1,9 @@
 import sqlite3
 
 # ------SQL Queries:------
-CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, age INTEGER, t_1 INTEGER, t_2 INTEGER, t_3 INTEGER, t_avg INTEGER, condition INTEGER);"
+CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username VARCHAR(30), password VARCHAR(30), age INTEGER, t_1 INTEGER, t_2 INTEGER, t_3 INTEGER, t_avg INTEGER);"
 
-INSERT_USER = "INSERT INTO users (username, password, age, t_1, t_2, t_3, t_avg, condition) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
+INSERT_USER = "INSERT INTO users (username, password, age, t_1, t_2, t_3, t_avg) VALUES (?, ?, ?, ?, ?, ?, ?);"
 
 GET_ALL_USERS = "SELECT * FROM users;"
 GET_ALL_AGE_Y_TIME = "SELECT age, t_avg FROM users;"
@@ -19,9 +19,9 @@ def create_tables(connection): # Function: Creates a database table called users
     with connection:
         connection.execute(CREATE_USER_TABLE)
         
-def add_user(connection, username, password, age, t_1, t_2, t_3, t_avg, condition): # Function: Adds a user to the database with the given values.
+def add_user(connection, username, password, age, t_1, t_2, t_3, t_avg): # Function: Adds a user to the database with the given values.
     with connection:
-        connection.execute(INSERT_USER, (username, password, age, t_1, t_2, t_3, t_avg, condition))
+        connection.execute(INSERT_USER, (username, password, age, t_1, t_2, t_3, t_avg))
 
 def get_all_users(connection): # Function: returns all users and thier data from the database.
     with connection:

@@ -12,6 +12,7 @@ from settings import *
 pg.init()
 pg.display.set_caption('Memory Processing Tool')
 display = pg.display.set_mode((RES))
+image_surface = pg.display.set_mode((800, 400))
 background = pg.Surface((RES))
 display.fill((STAND_BACK_COL))
 
@@ -29,11 +30,13 @@ class Graph:
         self.results_output = 0
         self.age = []
         self.time = []
+        self.scatter_image = pg.image.load('Images\\age_time.png')
+        image_surface.blit(self.scatter_image, (0, 0))
         
         # ------GUI:------
         # Panels: 
         self.graph_panel = pg_gui.elements.UIPanel(
-            pg.Rect((10, 10), (790, 380)), 
+            pg.Rect((10, 10), (780, 380)), 
             1, 
             manager,
             object_id = ObjectID(
@@ -42,7 +45,7 @@ class Graph:
                 )
             )
         self.panel = pg_gui.elements.UIPanel(
-            pg.Rect((10, 400), (790, 380)), 
+            pg.Rect((10, 400), (780, 380)), 
             1, 
             manager,
             object_id = ObjectID(
@@ -65,20 +68,19 @@ class Graph:
             self.panel
             )
         self.quit_but.hide()
-        self.image_but = pg_gui.elements.UIButton(
-            pg.Rect((0, 0), (790, 380)), 
-            '', 
-            manager, 
-            self.graph_panel,
-            object_id = ObjectID(
-                object_id = '#image_but'
-                )
-            )
+
+        # Images:
+        self.image = pg_gui.elements.UIImage(
+            pg.Rect((0, 0), (770, 380)),
+            image_surface,
+            manager,
+            container = self.graph_panel
+        )
         
         # Text Boxes:
         self.scatter_text_box = pg_gui.elements.UITextBox(
             TEXT_ARRAY[4], 
-            pg.Rect((10, 140), (760, 220)), 
+            pg.Rect((10, 140), (750, 220)), 
             manager, 
             starting_height = 1, 
             container = self.panel, 
@@ -118,11 +120,11 @@ class Graph:
             self.text = "Very Low Risk, High Processing Speed"
             self.results_output = 0
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text) # The label is changed for the user to read depending on thier results.
-        if time_quantiles[1] <= user_avg_time < time_quantiles[2]:
+        elif time_quantiles[1] <= user_avg_time < time_quantiles[2]:
             self.text = "Low Risk, Average Processing Speed"
             self.results_output = 1
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
-        if time_quantiles[2] <= user_avg_time < time_quantiles[3]:
+        elif time_quantiles[2] <= user_avg_time < time_quantiles[3]:
             self.text = "Slow Processing Speed, "
             if age_quantiles[2] <= user_age <= age_quantiles[4]:
                 self.text = self.text + "Average Risk"
@@ -131,11 +133,13 @@ class Graph:
                 self.text = self.text + "Low Risk"
                 self.results_output = 3
             pg_gui.elements.UILabel.set_text(self.age_time_label, self.text)
-        if time_quantiles[3] <= user_avg_time < time_quantiles[4]:
+        else:
             self.text = "Very Slow Processing Speed, "
             if age_quantiles[2] <= user_age <= age_quantiles[4]:
                 self.text = self.text + "High Risk"
                 self.results_output = 4
+            elif user_age > age_quantiles[4]:
+                self.text = self.text + "High Risk"
             else:
                 self.text = self.text + "Above Average Risk"
                 self.results_output = 5
@@ -148,10 +152,16 @@ class Graph:
         plt.xlabel("Age /years")
         plt.ylabel("Average Time /s")
         scatter = plt.gcf()
-        scatter.set_size_inches(7.5, 3.5)
+        scatter.set_size_inches(8, 4)
         plt.savefig(('Images/{}'.format(name)), dpi = 100)
         plt.close()
    
+    def display_image(self):
+        self.scatter_image = pg.image.load('Images\\age_time.png')
+        image_surface.blit(self.scatter_image, (0, 0))
+        self.image.set_image(self.scatter_image)
+        pg.display.flip()
+
     def but_pressed(self, but): # Function: Checks if a specific button has been pressed and does the following action if one has.
         if but == self.start_but:
             self.run() # Runs the function run() which will plot and save a graph as well as giving the user a prompt on-screen depending on thier performance.
@@ -166,6 +176,7 @@ class Graph:
     def run(self): # Function: Runs the functions time_age() and plot() when active.
         self.time_age()
         self.plot()
+        self.display_image()
     
 but = Graph()
 

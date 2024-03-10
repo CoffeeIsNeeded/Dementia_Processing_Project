@@ -144,7 +144,7 @@ class Login:
             )
         self.text = ""
         self.error_Label = pg_gui.elements.UILabel(
-            pg.Rect((140, 550), (500, 50)), 
+            pg.Rect((0, 600), (780, 50)), 
             self.text, 
             manager,
             container = self.reg_panel, 
@@ -234,22 +234,36 @@ class Login:
                 self.age = 131
             
     def but(self, process): # Checks if a button is pressed and carries out the appropriate response.
-        if process == self.reg_but: # Registers user information to the database if the appropriate conditions are met then: Starts the Maze game loop (Main.py); Starts Scatter graph file (Scatter.py)
+        if process == self.reg_but: # Registers user information to the database if error value remains false: Starts the Maze game loop (Main.py); Starts Scatter graph file (Scatter.py)
             self.text = ""
-            if self.reg_username not in self.DB_username:
-                if (" " not in self.reg_username) and (" " not in self.reg_password):
-                    if self.age <= 130:
-                        self.username = self.reg_username
-                        self.password = self.reg_password
-                        self.reg_disabled = True
-                        self.reg_panel.hide()
-                        self.preview_panel.show()
-                    else:
-                        self.text = "Age too large or is not a number"
-                else:
-                    self.text = "Spaces found in username or password."
+            text = ""
+            check_array = []
+            error = False
+            if self.reg_username in self.DB_username:
+                check_array.append("Username already in use.")
+                error = True
+            if (len(self.reg_username) > 30) or (len(self.reg_password) > 30):
+                check_array.append("Username or password longer than 30 characters.")
+                error = True  
+            if (" " in self.reg_username) or (" " in self.reg_password):
+                check_array.append("Spaces found in username or password.")
+                error = True  
+            if not self.age <= 130:
+                check_array.append("Age too large or is not a number")
+                error = True
+
+            if error == True:
+                for errors in check_array:
+                    text += (errors + " ")
+                self.text = text
             else:
-                self.text = "Username already in use."
+                text = ""
+                self.text = text
+                self.username = self.reg_username
+                self.password = self.reg_password
+                self.reg_disabled = True
+                self.reg_panel.hide()
+                self.preview_panel.show()
             pg_gui.elements.UILabel.set_text(self.error_Label, self.text)
         if process == self.preview_but:
             if self.reg_disabled == True:
@@ -304,7 +318,7 @@ class Login:
 
     def reg(self, connection): # Function: runs a database.py function add_user() to submit the username, password and age values into the database as a new user.
         null = 0
-        Database.add_user(self.connection, self.username, self.password, self.age, null, null, null, null, null)
+        Database.add_user(self.connection, self.username, self.password, self.age, null, null, null, null)
     
 process = Login(connection)
 
